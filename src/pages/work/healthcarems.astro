@@ -1,0 +1,134 @@
+---
+import CaseLayout from '../../layouts/CaseLayout.astro';
+---
+
+<CaseLayout
+  title="HealthCareMS — clinical workflows"
+  description="A .NET 10 healthcare platform covering appointments, e-prescriptions, pharmacy stock and lab orders — and why it is deliberately a well-layered monolith rather than a set of microservices."
+  kicker="Case study · Open source, code available"
+  heading="HealthCareMS — clinical workflows without a distributed system"
+  standfirst="Appointments, consultations, e-prescriptions, pharmacy stock and labs in one platform. The interesting decision was not what to build but what to refuse to build: this is a monolith on purpose, and the reasoning matters more than the feature list."
+  meta={[
+    { label: 'Role', value: 'Sole architect and developer' },
+    { label: 'Type', value: 'Open source' },
+    { label: 'Domain', value: 'Healthcare operations' },
+    { label: 'Code', value: 'Public on GitHub' },
+  ]}
+  stack={[
+    '.NET 10',
+    'Blazor WebAssembly',
+    'PostgreSQL',
+    'EF Core',
+    'SignalR',
+    'Hangfire',
+    'Serilog',
+  ]}
+  repo={{ href: 'https://github.com/waqasahmad31/HealthCareMS', label: 'Read the code on GitHub' }}
+>
+  <h2>What it covers</h2>
+
+  <p>
+    A clinic runs on a handful of workflows that all touch the same patient record. HealthCareMS
+    implements them as one system:
+  </p>
+
+  <ul>
+    <li>
+      <strong>Appointments and queueing</strong> — booking, confirmation, cancellation,
+      rescheduling, walk-in queues, slot-conflict checks and live queue boards.
+    </li>
+    <li>
+      <strong>Consultations</strong> — diagnosis with ICD-10 coding, vitals and trends, waiting
+      room, and online video consultation.
+    </li>
+    <li>
+      <strong>E-prescriptions</strong> — PDF generation with QR, drug search, and allergy checking
+      against the patient's history.
+    </li>
+    <li>
+      <strong>Pharmacy</strong> — medicine catalogue, stock batches on FIFO, expiry and low-stock
+      alerts, bulk import and barcode support.
+    </li>
+    <li>
+      <strong>Labs</strong> — orders raised from a consultation, with summary PDFs back on the
+      record.
+    </li>
+    <li>
+      <strong>Notifications</strong> — email, SMS, in-app, and scheduled reminders.
+    </li>
+  </ul>
+
+  <h2>The decision worth explaining</h2>
+
+  <p>
+    A feature list like that is where most projects reach for microservices — a pharmacy service, a
+    lab service, an appointments service. I deliberately did not.
+  </p>
+
+  <div class="callout">
+    <p>
+      These workflows share one patient record and need consistency across it. Splitting them into
+      services would have converted simple database transactions into distributed ones, and bought
+      independent scaling that a clinic will never need.
+    </p>
+  </div>
+
+  <p>
+    Prescribing a drug has to check allergies against patient history, decrement pharmacy stock, and
+    write to the consultation record. In one database that is a transaction. Across three services it
+    is a saga, with compensating actions, partial-failure states, and a new class of bug in a system
+    where the failure mode is a patient's medication record.
+  </p>
+
+  <p>
+    So the shape is a <strong>well-layered monolith</strong>: Domain, Application and Infrastructure
+    with dependencies pointing inward, the domain kept persistence-agnostic, and the API composing
+    the rest. The boundaries are enforced in the codebase rather than over the network — which keeps
+    the option of splitting a piece out later, if there is ever a real reason to.
+  </p>
+
+  <h2>Where real-time was worth the cost</h2>
+
+  <p>
+    Not everything can be request/response. SignalR carries the pieces that are genuinely live:
+    queue boards that must update as patients are called, and consultation chat with attachments and
+    read receipts. These are cases where polling would be both wasteful and visibly wrong to the
+    person watching the screen.
+  </p>
+
+  <p>
+    Anything that is <em>scheduled</em> rather than live goes to <strong>Hangfire</strong> —
+    appointment reminders, for example. Background jobs and real-time push solve different problems,
+    and conflating them is a common way to end up with neither working well.
+  </p>
+
+  <h2>Operational choices</h2>
+
+  <ul>
+    <li>
+      <strong>JWT with access and refresh flow</strong>, plus roles, permissions and permission
+      middleware — a clinic has genuinely distinct roles, and "admin or not" is not sufficient.
+    </li>
+    <li>
+      <strong>Serilog structured logging</strong>, so production questions are answered by querying
+      logs rather than reading them.
+    </li>
+    <li>
+      <strong>Health checks and OpenAPI</strong> exposed from the API, so the system is inspectable
+      from outside.
+    </li>
+    <li>
+      <strong>Docker Compose</strong> for the full stack, so the project actually runs for someone
+      who clones it.
+    </li>
+  </ul>
+
+  <h2>Why it is public</h2>
+
+  <p>
+    Most of my production work sits behind client agreements. HealthCareMS is the one substantial
+    system where the code itself is available to read — so if you want to see how I structure a
+    codebase, name things, and draw boundaries rather than take my word for it, this is the one to
+    open.
+  </p>
+</CaseLayout>

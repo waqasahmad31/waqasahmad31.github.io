@@ -1,0 +1,161 @@
+---
+import CaseLayout from '../../layouts/CaseLayout.astro';
+---
+
+<CaseLayout
+  title="Scaling a national identity system"
+  description="How enrolment throughput on a national biometric identity platform went from 4–6K to over 23,000 records an hour — batching, query and index work, and table partitioning, without weakening the security baseline."
+  kicker="Case study · Government, national scale"
+  heading="Scaling a national identity system to 23,000 enrolments an hour"
+  standfirst="The enrolment pipeline was plateauing at four to six thousand records an hour against a backlog that kept growing. Four times that figure was not a tuning exercise — it meant finding where time was actually going, and paying for the gains without giving up auditability."
+  meta={[
+    { label: 'Role', value: 'Technical lead, team of 8' },
+    { label: 'Client', value: 'National government identity programme' },
+    { label: 'Period', value: 'May 2025 — present' },
+    { label: 'Scope', value: 'Architecture, delivery, production support' },
+  ]}
+  stack={[
+    'ASP.NET Core 8',
+    'PostgreSQL',
+    'Kubernetes',
+    'RabbitMQ',
+    'GitLab CI/CD',
+    'Grafana',
+    'OpenTelemetry',
+  ]}
+>
+  <div class="callout">
+    <p>
+      This is a government biometric programme, so what follows is deliberately limited to
+      engineering technique. No system internals, schemas, vendors or operational details appear
+      here — nothing beyond what is already on my public CV.
+    </p>
+  </div>
+
+  <h2>The situation</h2>
+
+  <p>
+    A national identity platform (ABIS) ingests biometric enrolments continuously. When I took over
+    technical lead, the pipeline was sustaining roughly <strong>4,000 to 6,000 records an hour</strong>.
+    That number was not catastrophic on its own — the problem was that intake was growing faster than
+    processing, so the backlog compounded daily. A system that falls behind a little every day is on
+    a schedule to fail.
+  </p>
+
+  <p>
+    Two constraints shaped everything. First, this is identity data for a national population, so the
+    security baseline was not negotiable to buy speed. Second, the platform runs across sixteen
+    Kubernetes nodes spanning Production and Disaster Recovery, which meant any change had to behave
+    identically in both.
+  </p>
+
+  <h2>Measuring before changing anything</h2>
+
+  <p>
+    The tempting move was to start optimising the code that <em>looked</em> slow. I did not. We put
+    OpenTelemetry tracing in first, exported over OTLP, with Grafana dashboards on the enrolment path.
+    Until you can see where a record actually spends its time, optimisation is guesswork with a
+    deployment risk attached.
+  </p>
+
+  <p>
+    What the traces showed was that the bottleneck was not compute. It was the volume of small
+    round-trips per record and the growing cost of writes against tables that had become very large.
+  </p>
+
+  <h2>What actually moved the number</h2>
+
+  <h3>Request batching</h3>
+  <p>
+    The pipeline was processing records one at a time, paying fixed per-request overhead thousands of
+    times an hour. Batching related work collapsed that overhead dramatically. This was the single
+    largest contributor, and it cost nothing in correctness because the operations were already
+    independent.
+  </p>
+
+  <h3>Query and index optimisation</h3>
+  <p>
+    Several hot queries were doing more work than they needed — scanning where they could seek,
+    and returning columns nobody read. Reworking those queries and the indexes behind them removed
+    a large, steady tax that applied to every single record.
+  </p>
+
+  <h3>Table partitioning</h3>
+  <p>
+    The deeper problem was that write cost was climbing as tables grew — the system was getting
+    slower precisely because it was succeeding. Partitioning the large tables meant writes landed on
+    smaller, hotter partitions, so throughput stopped degrading as the dataset expanded. This is the
+    change that made the gain durable rather than temporary.
+  </p>
+
+  <div class="result">
+    <div class="figure">23,000 records / hour</div>
+    <p>
+      Up from 4,000–6,000 — roughly a fourfold increase, verified in Grafana against production
+      traffic rather than a synthetic benchmark.
+    </p>
+  </div>
+
+  <h2>Not trading correctness for speed</h2>
+
+  <p>
+    A faster pipeline that loses or double-processes records is worse than a slow one. Alongside the
+    throughput work, the ingestion path was built to be resilient by design:
+  </p>
+
+  <ul>
+    <li>
+      <strong>RabbitMQ producer/consumer</strong> to decouple intake from processing, so a slow
+      downstream stage applies back-pressure instead of dropping work.
+    </li>
+    <li>
+      <strong>Transactional outbox dispatch</strong>, so a record is never committed locally without
+      its corresponding message eventually being published — no lost events on a crash between the
+      two.
+    </li>
+    <li>
+      <strong>Lease-based job recovery</strong>, so work claimed by a node that dies is picked up by
+      another rather than stranded.
+    </li>
+    <li>
+      <strong>Polly retry and circuit-breaker policies</strong> on external calls, so a failing
+      dependency degrades the system instead of cascading through it.
+    </li>
+  </ul>
+
+  <h2>The security baseline stayed put</h2>
+
+  <p>
+    Performance work is where security quietly erodes — a cache here, a skipped check there. I set the
+    baseline explicitly so it could not drift: HashiCorp Vault PKI with AppRole for certificate and
+    secret management, AES-256-GCM envelope encryption for data at rest, and Keycloak for SSO and MFA.
+    None of it was relaxed to reach the throughput target.
+  </p>
+
+  <h2>Making it hold</h2>
+
+  <p>
+    Throughput gains decay if the next change can silently undo them. We ended with
+    <strong>44 xUnit suites</strong> covering end-to-end flows, idempotency, and architecture rules —
+    the last of those failing the build when code crosses a layer boundary it should not. Combined
+    with the OpenTelemetry tracing already in place, a regression shows up as a failing test or a
+    visible dashboard change rather than a support ticket three weeks later.
+  </p>
+
+  <h2>What I would tell another engineer</h2>
+
+  <ul>
+    <li>
+      <strong>Instrument first.</strong> The bottleneck was not where the team assumed it was, and we
+      would have spent weeks optimising the wrong layer.
+    </li>
+    <li>
+      <strong>Fixed overhead beats clever algorithms.</strong> Batching away per-request cost
+      outperformed anything subtle we could have done inside the processing itself.
+    </li>
+    <li>
+      <strong>Ask whether the fix survives growth.</strong> Query tuning gave an immediate win;
+      partitioning is what stopped the win from eroding as the data grew.
+    </li>
+  </ul>
+</CaseLayout>

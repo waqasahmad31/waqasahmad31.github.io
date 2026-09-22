@@ -1,0 +1,140 @@
+---
+import CaseLayout from '../../layouts/CaseLayout.astro';
+---
+
+<CaseLayout
+  title="CoreFlow — ERP architecture"
+  description="Designing CoreFlow, an ERP for growing SMEs covering CRM, inventory, sales, procurement and finance — and the architectural decisions that keep six modules from collapsing into one tangled codebase."
+  kicker="Case study · Own product, in progress"
+  heading="CoreFlow — designing an ERP a small team can actually maintain"
+  standfirst="Six business modules, one codebase, and a team small enough that nobody can specialise. ERPs do not usually fail because a feature was hard; they fail because every module ends up reaching into every other one. That was the problem worth designing against."
+  meta={[
+    { label: 'Role', value: 'Architect and builder' },
+    { label: 'Type', value: 'Own product' },
+    { label: 'Status', value: 'In progress, pre-launch' },
+    { label: 'Market', value: 'Growing SMEs' },
+  ]}
+  stack={[
+    'ASP.NET Core',
+    'Angular',
+    'PostgreSQL',
+    'Dapper',
+    'Redis',
+    'Clean Architecture',
+    'CQRS',
+  ]}
+  repo={{ href: 'https://github.com/waqasahmad31/CoreFlow.Marketing', label: 'Product site on GitHub' }}
+>
+  <h2>What it is</h2>
+
+  <p>
+    CoreFlow is a business ERP for small and mid-sized companies that have outgrown spreadsheets and
+    a drawer full of disconnected tools. It covers <strong>CRM, inventory, sales, procurement,
+    finance and approvals</strong> as one system rather than six integrations.
+  </p>
+
+  <p>
+    It is my own product — architecture, build and positioning. That matters for this case study,
+    because it means every trade-off below was mine to get right or wrong, with no architect above me
+    to overrule a shortcut.
+  </p>
+
+  <h2>The actual hard problem</h2>
+
+  <p>
+    Writing an inventory module is not difficult. Writing an inventory module that sales,
+    procurement and finance all need to read from — without any of them reaching directly into its
+    tables — is where ERPs are won or lost.
+  </p>
+
+  <p>
+    The failure mode is well known and slow: module A queries module B's tables because it is faster
+    today, and eighteen months later no change is safe because nothing has a boundary. For a small
+    team this is fatal, since there is no headcount to absorb that kind of coupling.
+  </p>
+
+  <div class="callout">
+    <p>
+      Every decision below is aimed at one thing: making the wrong kind of coupling harder to write
+      than the right kind.
+    </p>
+  </div>
+
+  <h2>The decisions</h2>
+
+  <h3>Clean Architecture layering</h3>
+  <p>
+    Domain, Application, Infrastructure and API as distinct layers, with dependencies pointing
+    inward only. The domain knows nothing about EF Core, HTTP or PostgreSQL. This is not
+    architectural decoration — it is what lets a module be reasoned about, and tested, without
+    standing up the rest of the system.
+  </p>
+
+  <h3>CQRS separation</h3>
+  <p>
+    Reads and writes have genuinely different shapes in an ERP. A write needs domain rules, invariants
+    and validation; a report needs to join across six tables and return fast. Forcing both through
+    one model makes each worse.
+  </p>
+  <p>
+    So writes go through the domain model, and reads use <strong>Dapper projections</strong> that
+    return exactly the shape the screen needs. The result is that a slow report never forces a
+    compromise in the domain model, and a domain rule never has to be bent for a query.
+  </p>
+
+  <h3>Transactional outbox for cross-module events</h3>
+  <p>
+    When sales confirms an order, inventory must know. The naive version does both writes in one
+    place and hopes. The outbox pattern commits the event in the same transaction as the business
+    change, then dispatches it separately — so modules communicate through events rather than
+    through each other's tables, and a crash between the two steps cannot lose the message.
+  </p>
+
+  <h3>Redis hybrid caching</h3>
+  <p>
+    ERP screens read the same reference data constantly — product catalogues, tax rates, approval
+    chains. A hybrid cache keeps hot data in memory with Redis behind it, so the read path stays fast
+    across instances without every node holding its own divergent copy.
+  </p>
+
+  <h3>A generated API client, not a hand-written one</h3>
+  <p>
+    The Angular frontend consumes an <strong>OpenAPI/NSwag-generated client</strong> rather than
+    hand-written services. Hand-written API clients drift from the backend the moment someone is in a
+    hurry, and the drift surfaces at runtime in front of a customer. Generating the client means a
+    contract change breaks the build instead — which is exactly where it should break.
+  </p>
+
+  <h3>ASP.NET Core Identity</h3>
+  <p>
+    Authentication and authorisation on a standard, well-audited foundation. An ERP holds a company's
+    financial data; rolling my own auth would be the least defensible decision in the entire system.
+  </p>
+
+  <h2>What this bought</h2>
+
+  <ul>
+    <li>
+      A module can be changed, or read in isolation, without tracing its dependencies through five
+      others.
+    </li>
+    <li>
+      Reporting performance and domain correctness stopped competing with each other.
+    </li>
+    <li>
+      Backend and frontend cannot silently disagree about the API contract.
+    </li>
+    <li>
+      The layering is enforceable — architecture rules can fail the build rather than relying on
+      everyone remembering.
+    </li>
+  </ul>
+
+  <h2>Where it stands</h2>
+
+  <p>
+    CoreFlow is in progress and pre-launch. The product site is public and the platform itself is
+    private, since it is intended to be sold rather than given away. I would rather say that plainly
+    than present an unfinished product as a shipped one.
+  </p>
+</CaseLayout>

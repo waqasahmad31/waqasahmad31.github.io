@@ -1,0 +1,138 @@
+---
+import Layout from './Layout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  kicker: string;
+  heading: string;
+  standfirst: string;
+  meta: { label: string; value: string }[];
+  stack: string[];
+  repo?: { href: string; label: string };
+}
+
+const { title, description, kicker, heading, standfirst, meta, stack, repo } = Astro.props;
+---
+
+<Layout title={title} description={description}>
+  <article>
+    <header class="head">
+      <div class="wrap">
+        <a class="back" href="/#work">← All work</a>
+        <p class="kicker">{kicker}</p>
+        <h1>{heading}</h1>
+        <p class="standfirst">{standfirst}</p>
+
+        <dl class="meta">
+          {meta.map((m) => (
+            <div>
+              <dt>{m.label}</dt>
+              <dd>{m.value}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <div class="tags">
+          {stack.map((s) => <span class="tag">{s}</span>)}
+        </div>
+
+        {repo && (
+          <p class="repo">
+            <a href={repo.href} rel="noopener">{repo.label} →</a>
+          </p>
+        )}
+      </div>
+    </header>
+
+    <div class="wrap body">
+      <slot />
+    </div>
+
+    <div class="wrap next">
+      <a class="back" href="/#work">← Back to all work</a>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .head { padding: 54px 0 34px; border-bottom: 1px solid var(--color-border); }
+  .back { font-size: 14.5px; }
+  .head .kicker { margin-top: 26px; }
+  h1 { font-size: clamp(28px, 4.4vw, 40px); max-width: 21ch; }
+  .standfirst {
+    margin-top: 20px;
+    max-width: 62ch;
+    font-size: 17.5px;
+    color: var(--color-text-muted);
+  }
+
+  .meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px 26px;
+    margin: 32px 0 0;
+    padding: 22px 0 0;
+    border-top: 1px solid var(--color-border);
+  }
+  .meta dt {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+  .meta dd { margin: 5px 0 0; font-size: 15px; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 26px; }
+  .repo { margin-top: 20px; font-size: 15px; }
+
+  .body { padding-top: 14px; }
+</style>
+
+<style is:global>
+  .body h2 {
+    font-size: 23px;
+    margin: 44px 0 14px;
+    max-width: 30ch;
+  }
+  .body h3 {
+    font-size: 17.5px;
+    margin: 30px 0 8px;
+  }
+  .body p {
+    margin: 0 0 17px;
+    max-width: 66ch;
+    color: var(--color-text-muted);
+  }
+  .body p strong { color: var(--color-text); font-weight: 600; }
+  .body ul, .body ol { margin: 0 0 20px; padding-left: 20px; max-width: 66ch; }
+  .body li { margin-bottom: 9px; color: var(--color-text-muted); }
+  .body li strong { color: var(--color-text); font-weight: 600; }
+
+  .body .callout {
+    margin: 30px 0;
+    padding: 18px 20px;
+    border-left: 3px solid var(--color-accent);
+    background: var(--color-surface);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .body .callout p { margin: 0; font-size: 15.5px; }
+
+  .body .result {
+    margin: 34px 0;
+    padding: 24px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+  }
+  .body .result .figure {
+    font-size: 31px;
+    font-weight: 680;
+    letter-spacing: -0.03em;
+    color: var(--color-accent);
+  }
+  .body .result p { margin: 8px 0 0; }
+
+  .next { padding-top: 34px; }
+</style>

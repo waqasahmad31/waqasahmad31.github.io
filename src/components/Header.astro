@@ -1,0 +1,75 @@
+---
+const path = Astro.url.pathname;
+const isHome = path === '/';
+---
+
+<header class="site-header">
+  <div class="wrap-wide bar">
+    <a href="/" class="brand" aria-label="Waqas Ahmad — home">
+      <span class="mark">WA</span>
+      <span class="name">Waqas Ahmad</span>
+    </a>
+    <nav aria-label="Primary">
+      <a href={isHome ? '#work' : '/#work'}>Work</a>
+      <a href={isHome ? '#experience' : '/#experience'}>Experience</a>
+      <a href="https://github.com/waqasahmad31" rel="noopener">GitHub</a>
+      <a href="mailto:iamwaqas31@gmail.com" class="cta">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 62px;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .brand:hover { text-decoration: none; }
+  .mark {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--color-accent);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  nav { display: flex; align-items: center; gap: 22px; font-size: 14.5px; }
+  nav a { color: var(--color-text-muted); }
+  nav a:hover { color: var(--color-text); text-decoration: none; }
+  nav .cta {
+    color: var(--color-accent);
+    border: 1px solid var(--color-border);
+    background: var(--color-accent-soft);
+    padding: 5px 13px;
+    border-radius: 999px;
+  }
+  @media (max-width: 680px) {
+    .name { display: none; }
+    nav { gap: 15px; font-size: 14px; }
+  }
+  @media (max-width: 420px) {
+    nav a:not(.cta):nth-child(2) { display: none; }
+  }
+</style>

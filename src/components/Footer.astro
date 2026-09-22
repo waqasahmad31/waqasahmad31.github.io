@@ -1,0 +1,27 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer>
+  <div class="wrap-wide inner">
+    <p class="muted">
+      Waqas Ahmad — Senior Full-Stack .NET &amp; Angular Developer, Islamabad, Pakistan (GMT+5).
+    </p>
+    <p class="links">
+      <a href="mailto:iamwaqas31@gmail.com">Email</a>
+      <span aria-hidden="true">·</span>
+      <a href="https://linkedin.com/in/waqasahmad-dev" rel="noopener">LinkedIn</a>
+      <span aria-hidden="true">·</span>
+      <a href="https://github.com/waqasahmad31" rel="noopener">GitHub</a>
+    </p>
+    <p class="year muted">© {year}</p>
+  </div>
+</footer>
+
+<style>
+  footer { border-top: 1px solid var(--color-border); margin-top: 88px; }
+  .inner { padding-top: 32px; padding-bottom: 48px; font-size: 14.5px; }
+  .links { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .links span { color: var(--color-text-faint); }
+  .year { margin-top: 18px; font-size: 13px; color: var(--color-text-faint); }
+</style>

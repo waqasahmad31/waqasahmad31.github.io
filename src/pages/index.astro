@@ -1,0 +1,297 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const impact = [
+  { figure: '23K/hour', label: 'Enrolment throughput on a national identity system — up roughly 4× from 4–6K.' },
+  { figure: '16 nodes', label: 'Kubernetes footprint I deliver across, spanning Production and Disaster Recovery.' },
+  { figure: 'Team of 8', label: 'Engineers I lead — review, releases, production deployments and hiring.' },
+  { figure: '6+ years', label: 'Shipping production web and desktop platforms end-to-end.' },
+];
+
+const caseStudies = [
+  {
+    href: '/work/abis/',
+    kicker: 'Government · national scale',
+    title: 'Scaling a national identity system to 23,000 enrolments an hour',
+    summary:
+      'A biometric enrolment pipeline was plateauing at 4–6K records an hour. Batching, index and query work, and table partitioning took it past 23K — and it had to stay auditable and secure while it got faster.',
+    tags: ['ASP.NET Core 8', 'PostgreSQL', 'Kubernetes', 'RabbitMQ'],
+  },
+  {
+    href: '/work/coreflow/',
+    kicker: 'Own product · in progress',
+    title: 'CoreFlow — designing an ERP a small team can actually maintain',
+    summary:
+      'An ERP covering CRM, inventory, sales, procurement and finance for growing SMEs. The hard constraint was never features — it was keeping six modules from collapsing into one tangled codebase.',
+    tags: ['Clean Architecture', 'CQRS', 'Dapper', 'Redis'],
+  },
+  {
+    href: '/work/healthcarems/',
+    kicker: 'Open source · code available',
+    title: 'HealthCareMS — clinical workflows without a distributed system',
+    summary:
+      'Appointments, e-prescriptions, pharmacy stock and lab orders in one .NET 10 platform. A deliberate choice to keep it a well-layered monolith, and what that bought.',
+    tags: ['.NET 10', 'Blazor WASM', 'SignalR', 'Hangfire'],
+  },
+];
+
+const stack = [
+  { label: 'Backend', items: 'ASP.NET Core 8 · C# / .NET · EF Core · Dapper · REST APIs · Microservices · Clean Architecture · CQRS' },
+  { label: 'Frontend & desktop', items: 'Angular · NgRx / RxJS · TypeScript · React.js · Blazor (Server & WASM) · WPF / MVVM' },
+  { label: 'Data', items: 'PostgreSQL · MS SQL Server · MongoDB · MySQL · Redis' },
+  { label: 'Platform & messaging', items: 'Docker · Kubernetes · GitLab CI/CD · Azure DevOps · RabbitMQ · SignalR' },
+  { label: 'Security & quality', items: 'Keycloak SSO/MFA · HashiCorp Vault PKI · JWT / OAuth2 · xUnit · OpenTelemetry · Polly' },
+];
+
+const roles = [
+  {
+    period: 'May 2025 — Present',
+    title: 'Senior Full-Stack Engineer, Technical Team Lead',
+    org: 'Techostudios · Consult First IM&T (UK)',
+    notes: [
+      'Technical lead for eight engineers: merge-request review, release and production-deployment ownership, client requirement sessions, and technical interviewing.',
+      'Full-stack delivery of a national biometric identity platform — ASP.NET Core 8 API, WPF and Blazor Server clients, and an Angular import client, on Kubernetes via GitLab CI/CD.',
+      'Architected CoreFlow, an enterprise ERP on Clean Architecture, CQRS, PostgreSQL/Dapper and Redis hybrid caching.',
+    ],
+  },
+  {
+    period: 'Apr 2024 — Jun 2025',
+    title: 'Full-Stack .NET & Angular Developer',
+    org: 'Bingeable Technologies',
+    notes: [
+      'Built Bingeable, a streaming platform on .NET Core, Angular and AWS S3, from data model through UI.',
+      'Delivered Telemed Health with embedded Jitsi Meet consultation plus pharmacy and lab workflows — alongside e-learning, smart-home, travel, NFT and e-commerce products.',
+    ],
+  },
+  {
+    period: 'Jan 2023 — Aug 2024',
+    title: 'Full-Stack .NET & Angular Developer',
+    org: 'Arhpez Technologies',
+    notes: [
+      'Juris, a legal case-management platform with SignalR-powered real-time collaboration, and JobHunt USA, a recruitment platform with background-verification workflows.',
+      'IntelliDelve, a risk-assessment platform covering 100+ countries.',
+    ],
+  },
+  {
+    period: 'Jun 2020 — Dec 2022',
+    title: '.NET Developer',
+    org: 'Netrex Cloud',
+    notes: ['Built Tharwa, a meat supply-chain platform for an Oman-based client, on ASP.NET and .NET APIs.'],
+  },
+];
+---
+
+<Layout
+  title="Senior .NET & Angular Engineer"
+  description="Waqas Ahmad — senior full-stack .NET and Angular developer and technical team lead in Islamabad. Case studies from national-scale identity systems, ERP architecture and clinical platforms."
+>
+  <section class="hero">
+    <div class="wrap">
+      <p class="kicker">Islamabad, Pakistan (GMT+5) · Open to remote, onsite &amp; relocation</p>
+      <h1>I build and lead production systems end&#8209;to&#8209;end.</h1>
+      <p class="lede">
+        Senior full-stack .NET &amp; Angular developer, currently technical lead for a team of eight
+        delivering a national-scale biometric identity platform. Six years taking systems from
+        database schema through UI, and from CI/CD through production support.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="#work">Read the case studies</a>
+        <a class="btn" href="mailto:iamwaqas31@gmail.com">Get in touch</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="impact">
+    <div class="wrap">
+      <div class="impact-grid">
+        {impact.map((i) => (
+          <div class="stat">
+            <div class="figure">{i.figure}</div>
+            <p class="muted">{i.label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="work" class="block">
+    <div class="wrap">
+      <p class="kicker">Selected work</p>
+      <h2>Three systems, and the decisions behind them</h2>
+      <p class="section-note muted">
+        Most of what I build is private or client-owned, so these are written as case studies rather
+        than repositories — the problem, the trade-offs, and what actually changed.
+      </p>
+
+      <div class="cases">
+        {caseStudies.map((c) => (
+          <a class="case" href={c.href}>
+            <p class="case-kicker">{c.kicker}</p>
+            <h3>{c.title}</h3>
+            <p class="muted">{c.summary}</p>
+            <div class="tags">
+              {c.tags.map((t) => <span class="tag">{t}</span>)}
+            </div>
+            <span class="more">Read the case study →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <p class="kicker">Stack</p>
+      <h2>What I work with</h2>
+      <dl class="stack">
+        {stack.map((s) => (
+          <div class="stack-row">
+            <dt>{s.label}</dt>
+            <dd class="muted">{s.items}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <section id="experience" class="block">
+    <div class="wrap">
+      <p class="kicker">Experience</p>
+      <h2>Where I have done it</h2>
+      <ol class="timeline">
+        {roles.map((r) => (
+          <li>
+            <p class="period">{r.period}</p>
+            <h3>{r.title}</h3>
+            <p class="org">{r.org}</p>
+            <ul>
+              {r.notes.map((n) => <li class="muted">{n}</li>)}
+            </ul>
+          </li>
+        ))}
+      </ol>
+      <p class="edu muted">
+        MS Computer Science (3.96 GPA), Gomal University, 2023 · BS Computer Science (3.97 GPA),
+        Qurtuba University, 2020 · Pashto and Urdu native, English professional working proficiency.
+      </p>
+    </div>
+  </section>
+
+  <section class="block contact">
+    <div class="wrap">
+      <p class="kicker">Contact</p>
+      <h2>Open to senior, lead and architect roles</h2>
+      <p class="muted">
+        Remote, onsite or relocation — contract or full-time. The fastest way to reach me is email;
+        happy to walk through any of the architecture above in a conversation.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="mailto:iamwaqas31@gmail.com">iamwaqas31@gmail.com</a>
+        <a class="btn" href="https://linkedin.com/in/waqasahmad-dev" rel="noopener">LinkedIn</a>
+        <a class="btn" href="https://github.com/waqasahmad31" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero { padding: 88px 0 52px; }
+  .hero h1 { font-size: clamp(32px, 5.4vw, 50px); max-width: 15ch; }
+  .lede { margin-top: 22px; max-width: 60ch; font-size: 17.5px; color: var(--color-text-muted); }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .btn {
+    display: inline-block;
+    padding: 10px 19px;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .btn:hover { text-decoration: none; border-color: var(--color-accent); }
+  .btn.primary { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+
+  .impact { padding: 20px 0 8px; }
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 26px 32px;
+    padding: 30px 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .figure {
+    font-size: 27px;
+    font-weight: 680;
+    letter-spacing: -0.03em;
+    color: var(--color-accent);
+  }
+  .stat p { font-size: 14.5px; margin-top: 6px; }
+
+  .block { padding: 64px 0 0; }
+  .block h2 { font-size: clamp(23px, 3.2vw, 30px); margin-bottom: 14px; }
+  .section-note { max-width: 58ch; font-size: 15.5px; }
+
+  .cases { display: grid; gap: 16px; margin-top: 32px; }
+  .case {
+    display: block;
+    padding: 26px 26px 24px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    color: var(--color-text);
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .case:hover { text-decoration: none; border-color: var(--color-accent); transform: translateY(-2px); }
+  .case-kicker {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+  .case h3 { font-size: 20px; margin: 10px 0 10px; max-width: 34ch; }
+  .case p.muted { font-size: 15.5px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 16px; }
+  .more { display: inline-block; margin-top: 16px; font-size: 14.5px; color: var(--color-accent); }
+
+  .stack { margin: 26px 0 0; display: grid; gap: 0; }
+  .stack-row {
+    display: grid;
+    grid-template-columns: 190px 1fr;
+    gap: 18px;
+    padding: 15px 0;
+    border-top: 1px solid var(--color-border);
+  }
+  .stack-row:last-child { border-bottom: 1px solid var(--color-border); }
+  .stack dt { font-weight: 600; font-size: 15px; }
+  .stack dd { margin: 0; font-size: 15px; }
+
+  .timeline { list-style: none; margin: 28px 0 0; padding: 0; }
+  .timeline > li { padding: 0 0 30px 22px; border-left: 2px solid var(--color-border); position: relative; }
+  .timeline > li::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 7px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-accent);
+  }
+  .period { font-family: var(--font-mono); font-size: 12.5px; color: var(--color-text-faint); }
+  .timeline h3 { font-size: 18px; margin: 7px 0 3px; }
+  .org { font-size: 15px; color: var(--color-accent); }
+  .timeline ul { margin: 12px 0 0; padding-left: 18px; }
+  .timeline ul li { font-size: 15px; margin-bottom: 7px; }
+  .edu { font-size: 14.5px; padding-top: 6px; }
+
+  .contact h2 { max-width: 20ch; }
+  .contact p { max-width: 56ch; font-size: 16px; }
+
+  @media (max-width: 640px) {
+    .hero { padding: 58px 0 40px; }
+    .stack-row { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
