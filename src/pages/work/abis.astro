@@ -17,9 +17,13 @@ import CaseLayout from '../../layouts/CaseLayout.astro';
   stack={[
     'ASP.NET Core 8',
     'PostgreSQL',
+    'EF Core / Npgsql',
     'Kubernetes',
     'RabbitMQ',
     'GitLab CI/CD',
+    'OpenIddict',
+    'mTLS',
+    'HashiCorp Vault',
     'Grafana',
     'OpenTelemetry',
   ]}
@@ -47,6 +51,29 @@ import CaseLayout from '../../layouts/CaseLayout.astro';
     security baseline was not negotiable to buy speed. Second, the platform runs across sixteen
     Kubernetes nodes spanning Production and Disaster Recovery, which meant any change had to behave
     identically in both.
+  </p>
+
+  <h2>What the platform actually is</h2>
+
+  <p>
+    It is worth being precise about the shape, because it changes what "optimisation" means. This is
+    not one application with a slow function in it. It is <strong>nine independently deployed
+    services and clients</strong> on .NET 8 — a core web API, an administration API, a user and
+    access service, a biometric extraction service, an EFT import service with its own Angular
+    client, a migration API, a WPF capture client for enrolment stations, and a load-testing harness
+    built specifically to reproduce production pressure.
+  </p>
+
+  <p>
+    PostgreSQL is authoritative behind EF Core and Npgsql, with S3-compatible object storage for
+    biometric artefacts. Every endpoint is versioned, because the WPF clients are installed on
+    machines in the field and cannot be redeployed in step with the server.
+  </p>
+
+  <p>
+    A record therefore crosses process boundaries on its way through enrolment. That is precisely why
+    measuring first mattered: in a distributed system the slow part is rarely where the person
+    debugging it assumes.
   </p>
 
   <h2>Measuring before changing anything</h2>
@@ -127,19 +154,44 @@ import CaseLayout from '../../layouts/CaseLayout.astro';
 
   <p>
     Performance work is where security quietly erodes — a cache here, a skipped check there. I set the
-    baseline explicitly so it could not drift: HashiCorp Vault PKI with AppRole for certificate and
-    secret management, AES-256-GCM envelope encryption for data at rest, and Keycloak for SSO and MFA.
-    None of it was relaxed to reach the throughput target.
+    baseline explicitly so it could not drift, and it is layered rather than single-factor:
   </p>
+
+  <ul>
+    <li>
+      <strong>OpenIddict</strong> issuing and validating tokens, with <strong>Keycloak</strong>
+      providing SSO and MFA for operators.
+    </li>
+    <li>
+      <strong>Mutual-TLS certificate authentication</strong> between services, so a service cannot be
+      impersonated from inside the cluster.
+    </li>
+    <li>
+      <strong>HashiCorp Vault PKI with AppRole</strong> managing those certificates and the secrets
+      behind them, rather than configuration files holding long-lived credentials.
+    </li>
+    <li>
+      <strong>AES-256-GCM/JWE envelope encryption</strong> for data at rest.
+    </li>
+  </ul>
+
+  <p>None of it was relaxed to reach the throughput target.</p>
 
   <h2>Making it hold</h2>
 
   <p>
     Throughput gains decay if the next change can silently undo them. We ended with
     <strong>44 xUnit suites</strong> covering end-to-end flows, idempotency, and architecture rules —
-    the last of those failing the build when code crosses a layer boundary it should not. Combined
-    with the OpenTelemetry tracing already in place, a regression shows up as a failing test or a
-    visible dashboard change rather than a support ticket three weeks later.
+    the last of those failing the build when code crosses a layer boundary it should not — plus
+    FluentValidation on the request surface and health checks on the database and every downstream
+    dependency. Combined with the OpenTelemetry tracing already in place, a regression shows up as a
+    failing test or a visible dashboard change rather than a support ticket three weeks later.
+  </p>
+
+  <p>
+    GitLab CI/CD runs separate pipelines for Test, Production and Disaster Recovery. DR being a real
+    pipeline rather than a documented procedure is the part that matters: a recovery environment
+    nobody deploys to is a recovery environment nobody can trust.
   </p>
 
   <h2>What I would tell another engineer</h2>

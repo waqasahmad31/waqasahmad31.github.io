@@ -7,20 +7,22 @@ import CaseLayout from '../../layouts/CaseLayout.astro';
   description="Designing CoreFlow, an ERP for growing SMEs covering CRM, inventory, sales, procurement and finance — and the architectural decisions that keep six modules from collapsing into one tangled codebase."
   kicker="Case study · Own product, in progress"
   heading="CoreFlow — designing an ERP a small team can actually maintain"
-  standfirst="Six business modules, one codebase, and a team small enough that nobody can specialise. ERPs do not usually fail because a feature was hard; they fail because every module ends up reaching into every other one. That was the problem worth designing against."
+  standfirst="Twenty-four feature modules, one codebase, and a team small enough that nobody can specialise. ERPs do not usually fail because a feature was hard; they fail because every module ends up reaching into every other one. That was the problem worth designing against."
   meta={[
     { label: 'Role', value: 'Architect and builder' },
     { label: 'Type', value: 'Own product' },
     { label: 'Status', value: 'In progress, pre-launch' },
-    { label: 'Market', value: 'Growing SMEs' },
+    { label: 'Scale', value: '24 modules · 7 backend projects · 6 test suites' },
   ]}
   stack={[
-    'ASP.NET Core',
-    'Angular',
-    'PostgreSQL',
+    '.NET 10',
+    'Angular 22',
+    'TypeScript 6',
+    'PostgreSQL 18',
+    'EF Core',
     'Dapper',
-    'Redis',
-    'Clean Architecture',
+    'Valkey / Redis',
+    'NSwag',
     'CQRS',
   ]}
   repo={{ href: 'https://github.com/waqasahmad31/CoreFlow.Marketing', label: 'Product site on GitHub' }}
@@ -31,6 +33,14 @@ import CaseLayout from '../../layouts/CaseLayout.astro';
     CoreFlow is a business ERP for small and mid-sized companies that have outgrown spreadsheets and
     a drawer full of disconnected tools. It covers <strong>CRM, inventory, sales, procurement,
     finance and approvals</strong> as one system rather than six integrations.
+  </p>
+
+  <p>
+    That is the sales description. The engineering description is
+    <strong>24 feature modules</strong> — master data, pricing, procurement, returns, advanced
+    inventory, finance and financial accounting, documents, exports, reporting, search,
+    notifications, collaboration, governance, security, system health and more — over
+    <strong>24 domain aggregates</strong>, across seven backend projects and six test suites.
   </p>
 
   <p>
@@ -93,16 +103,39 @@ import CaseLayout from '../../layouts/CaseLayout.astro';
   <h3>Redis hybrid caching</h3>
   <p>
     ERP screens read the same reference data constantly — product catalogues, tax rates, approval
-    chains. A hybrid cache keeps hot data in memory with Redis behind it, so the read path stays fast
-    across instances without every node holding its own divergent copy.
+    chains. HybridCache keeps hot data in memory with a Valkey/Redis L2 behind it, so the read path
+    stays fast across instances without every node holding its own divergent copy. The same Redis
+    also backs Data Protection and the SignalR backplane, which is what makes running more than one
+    replica safe rather than merely possible.
   </p>
 
   <h3>A generated API client, not a hand-written one</h3>
   <p>
-    The Angular frontend consumes an <strong>OpenAPI/NSwag-generated client</strong> rather than
+    The Angular 22 frontend consumes an <strong>OpenAPI/NSwag-generated client</strong> rather than
     hand-written services. Hand-written API clients drift from the backend the moment someone is in a
     hurry, and the drift surfaces at runtime in front of a customer. Generating the client means a
     contract change breaks the build instead — which is exactly where it should break.
+  </p>
+  <p>
+    The contract is also checked against an <strong>immutable baseline</strong>, so changes have to be
+    additive. An ERP customer does not upgrade their integrations because I shipped on a Tuesday.
+  </p>
+
+  <h3>An API surface designed for clients that cannot redeploy in lockstep</h3>
+  <p>
+    Three decisions do most of the work here. Updates round-trip an <strong>opaque concurrency
+    token</strong> and a stale one returns 409 rather than silently overwriting someone else's edit —
+    in finance that distinction is the whole game. High-impact operations require an
+    <strong>Idempotency-Key</strong>, so a retried request after a timeout does not post a second
+    invoice. And errors are <strong>RFC ProblemDetails</strong> carrying an error code, trace ID and
+    correlation ID, so a support conversation starts from an identifier instead of a screenshot.
+  </p>
+
+  <h3>Migrations that never run themselves</h3>
+  <p>
+    A separate <strong>DatabaseMigrator</strong> project owns schema changes, and the API never
+    migrates production automatically. You run a dry-run, read it, then apply with an explicit flag.
+    Automatic migration on startup is convenient right up to the morning it is not.
   </p>
 
   <h3>ASP.NET Core Identity</h3>
@@ -125,8 +158,12 @@ import CaseLayout from '../../layouts/CaseLayout.astro';
       Backend and frontend cannot silently disagree about the API contract.
     </li>
     <li>
-      The layering is enforceable — architecture rules can fail the build rather than relying on
-      everyone remembering.
+      The layering is enforceable — architecture rules fail the build rather than relying on everyone
+      remembering, and Husky runs the gate before a commit lands.
+    </li>
+    <li>
+      Six test projects cover unit, domain, architecture, contract, API integration and PostgreSQL
+      integration, so "it compiles" is not the standard for a change.
     </li>
   </ul>
 
