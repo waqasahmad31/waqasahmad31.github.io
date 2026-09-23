@@ -18,12 +18,16 @@ import CaseLayout from '../../layouts/CaseLayout.astro';
     'ASP.NET Core 8',
     'PostgreSQL',
     'EF Core / Npgsql',
+    'WPF',
+    'MudBlazor',
+    'MegaMatcher SDK',
     'Kubernetes',
     'RabbitMQ',
     'GitLab CI/CD',
     'OpenIddict',
     'mTLS',
     'HashiCorp Vault',
+    'NBomber',
     'Grafana',
     'OpenTelemetry',
   ]}
@@ -57,23 +61,44 @@ import CaseLayout from '../../layouts/CaseLayout.astro';
 
   <p>
     It is worth being precise about the shape, because it changes what "optimisation" means. This is
-    not one application with a slow function in it. It is <strong>nine independently deployed
-    services and clients</strong> on .NET 8 — a core web API, an administration API, a user and
-    access service, a biometric extraction service, an EFT import service with its own Angular
-    client, a migration API, a WPF capture client for enrolment stations, and a load-testing harness
-    built specifically to reproduce production pressure.
+    not one application with a slow function in it. On .NET 8 it is:
+  </p>
+
+  <ul>
+    <li>
+      <strong>Three APIs</strong> — the core web API, a migration API with a MudBlazor operations UI,
+      and a containerised biometric extraction API.
+    </li>
+    <li>
+      <strong>Three desktop applications</strong> deployed to machines across the country — for
+      administration, operator enrolment, and bulk EFT import — each with its own installer and
+      auto-updater.
+    </li>
+    <li>
+      <strong>A load-testing harness</strong> built on NBomber specifically to reproduce production
+      pressure, plus a standalone capture utility for working with fingerprint hardware.
+    </li>
+  </ul>
+
+  <p>
+    The function the system exists for is <strong>deduplication</strong>: establishing that a person
+    enrolling is not already enrolled under another identity. That is 1:N matching against a
+    MegaMatcher Accelerator cluster, with a dedicated policy engine — and its own test suite —
+    deciding what counts as a match. Records are exchanged in the EFT interchange format through one
+    shared library rather than parsed separately in each application.
   </p>
 
   <p>
     PostgreSQL is authoritative behind EF Core and Npgsql, with S3-compatible object storage for
-    biometric artefacts. Every endpoint is versioned, because the WPF clients are installed on
-    machines in the field and cannot be redeployed in step with the server.
+    biometric artefacts. Every endpoint is versioned, because desktop clients sit on machines in the
+    field and cannot be redeployed in step with the server — a container you can roll forward, a
+    thousand installed workstations you cannot.
   </p>
 
   <p>
-    A record therefore crosses process boundaries on its way through enrolment. That is precisely why
-    measuring first mattered: in a distributed system the slow part is rarely where the person
-    debugging it assumes.
+    A record therefore crosses several process boundaries on its way through enrolment. That is
+    precisely why measuring first mattered: in a distributed system the slow part is rarely where the
+    person debugging it assumes.
   </p>
 
   <h2>Measuring before changing anything</h2>
