@@ -1,18 +1,28 @@
 ---
 const path = Astro.url.pathname;
-const isHome = path === '/';
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+
+const links = [
+  { href: '/work/', label: 'Work' },
+  { href: '/about/', label: 'About' },
+];
 ---
 
 <header class="site-header">
   <div class="wrap-wide bar">
     <a href="/" class="brand" aria-label="Waqas Ahmad — home">
-      <span class="mark">WA</span>
-      <span class="name">Waqas Ahmad</span>
+      <span class="mark" aria-hidden="true">WA</span>
+      <span class="brand-text">
+        <span class="name">Waqas Ahmad</span>
+        <span class="role">.NET &amp; Angular · Tech Lead</span>
+      </span>
     </a>
+
     <nav aria-label="Primary">
-      <a href={isHome ? '#work' : '/#work'}>Work</a>
-      <a href={isHome ? '#experience' : '/#experience'}>Experience</a>
-      <a href="https://github.com/waqasahmad31" rel="noopener">GitHub</a>
+      {links.map((l) => (
+        <a href={l.href} class:list={['nav-link', { active: isActive(l.href) }]}>{l.label}</a>
+      ))}
+      <a href="https://github.com/waqasahmad31" class="nav-link ext" rel="noopener">GitHub</a>
       <a href="mailto:iamwaqas31@gmail.com" class="cta">Contact</a>
     </nav>
   </div>
@@ -22,9 +32,10 @@ const isHome = path === '/';
   .site-header {
     position: sticky;
     top: 0;
-    z-index: 10;
-    background: color-mix(in srgb, var(--color-bg) 88%, transparent);
-    backdrop-filter: blur(10px);
+    z-index: 20;
+    background: color-mix(in srgb, var(--color-bg) 86%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--color-border);
   }
   .bar {
@@ -32,44 +43,58 @@ const isHome = path === '/';
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    height: 62px;
+    height: 66px;
   }
-  .brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--color-text);
-    font-weight: 600;
-  }
+
+  .brand { display: inline-flex; align-items: center; gap: 11px; color: var(--color-text); }
   .brand:hover { text-decoration: none; }
   .mark {
     display: grid;
     place-items: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 8px;
+    width: 34px;
+    height: 34px;
+    flex: none;
+    border-radius: 10px;
     background: var(--color-accent);
-    color: #fff;
+    color: var(--color-on-accent);
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 12.5px;
     font-weight: 700;
-    letter-spacing: 0.02em;
   }
-  nav { display: flex; align-items: center; gap: 22px; font-size: 14.5px; }
-  nav a { color: var(--color-text-muted); }
-  nav a:hover { color: var(--color-text); text-decoration: none; }
-  nav .cta {
-    color: var(--color-accent);
-    border: 1px solid var(--color-border);
-    background: var(--color-accent-soft);
-    padding: 5px 13px;
+  .brand-text { display: flex; flex-direction: column; line-height: 1.25; }
+  .name { font-weight: 640; font-size: 15.5px; letter-spacing: -0.01em; }
+  .role { font-size: 11.5px; color: var(--color-text-faint); }
+
+  nav { display: flex; align-items: center; gap: 6px; font-size: 14.5px; }
+  .nav-link {
+    color: var(--color-text-muted);
+    padding: 7px 12px;
     border-radius: 999px;
+    font-weight: 500;
   }
-  @media (max-width: 680px) {
+  .nav-link:hover {
+    color: var(--color-text);
+    text-decoration: none;
+    background: var(--color-surface-2);
+  }
+  .nav-link.active { color: var(--color-text); background: var(--color-surface-2); }
+  .cta {
+    margin-left: 6px;
+    padding: 7px 16px;
+    border-radius: 999px;
+    font-weight: 550;
+    color: var(--color-on-accent);
+    background: var(--color-accent);
+  }
+  .cta:hover { text-decoration: none; background: var(--color-accent-hover); }
+
+  @media (max-width: 720px) {
+    .role { display: none; }
+    nav { gap: 2px; font-size: 14px; }
+    .nav-link { padding: 7px 9px; }
+  }
+  @media (max-width: 520px) {
     .name { display: none; }
-    nav { gap: 15px; font-size: 14px; }
-  }
-  @media (max-width: 420px) {
-    nav a:not(.cta):nth-child(2) { display: none; }
+    .nav-link.ext { display: none; }
   }
 </style>

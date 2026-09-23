@@ -1,0 +1,230 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { profile, skillGroups, experience, education, languages } from '../data/profile';
+---
+
+<Layout
+  title="About & full CV"
+  description="Full professional background for Waqas Ahmad — senior full-stack .NET and Angular developer and technical team lead: complete experience, skills, education, languages and contact details."
+>
+  <section class="head">
+    <div class="wrap-wide">
+      <p class="kicker">About</p>
+      <h1>{profile.name}</h1>
+      <p class="role">{profile.title} · {profile.subtitle}</p>
+
+      <div class="contact-bar">
+        <a href={`mailto:${profile.email}`}>{profile.email}</a>
+        <span aria-hidden="true">·</span>
+        <a href={profile.phoneHref}>{profile.phone}</a>
+        <span aria-hidden="true">·</span>
+        <a href={profile.linkedin} rel="noopener">{profile.linkedinLabel}</a>
+        <span aria-hidden="true">·</span>
+        <a href={profile.github} rel="noopener">{profile.githubLabel}</a>
+      </div>
+      <p class="avail muted">
+        {profile.location} ({profile.timezone}) · {profile.availability}
+      </p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap-wide">
+      <h2>Profile</h2>
+      <div class="prose">
+        <p>{profile.summary}</p>
+        <p>{profile.summaryTwo}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap-wide">
+      <h2>Skills</h2>
+      <dl class="skills">
+        {skillGroups.map((g) => (
+          <div class="skill-row">
+            <dt>{g.label}</dt>
+            <dd>
+              <div class="tags">
+                {g.items.map((s) => <span class="tag">{s}</span>)}
+              </div>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap-wide">
+      <h2>Experience</h2>
+      <ol class="roles">
+        {experience.map((r) => (
+          <li class="role-item">
+            <div class="role-head">
+              <div>
+                <h3>{r.title}</h3>
+                <p class="org">{r.org}</p>
+                <p class="place muted">
+                  {r.place}{r.context ? ` · ${r.context}` : ''}
+                </p>
+              </div>
+              <p class="period">{r.period}</p>
+            </div>
+            <ul>
+              {r.notes.map((n) => <li>{n}</li>)}
+            </ul>
+          </li>
+        ))}
+      </ol>
+      <p class="note muted">
+        Each product from these roles is described individually on the <a href="/work/">work page</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap-wide">
+      <div class="two-col">
+        <div>
+          <h2>Education</h2>
+          <ul class="plain">
+            {education.map((e) => (
+              <li>
+                <p class="strong">{e.degree} — {e.grade}</p>
+                <p class="muted small">{e.school} · {e.year}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h2>Languages</h2>
+          <ul class="plain">
+            {languages.map((l) => (
+              <li>
+                <p class="strong">{l.name}</p>
+                <p class="muted small">{l.level}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap-wide panel">
+      <p class="kicker">Contact</p>
+      <h2 class="panel-h">Let us talk</h2>
+      <p class="muted">
+        I am open to senior full-stack, technical lead and architect roles — remote, onsite or
+        relocation, contract or full-time.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href={`mailto:${profile.email}`}>{profile.email}</a>
+        <a class="btn" href={profile.phoneHref}>{profile.phone}</a>
+        <a class="btn" href={profile.linkedin} rel="noopener">LinkedIn</a>
+        <a class="btn" href={profile.github} rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .head { padding: 64px 0 34px; border-bottom: 1px solid var(--color-border); }
+  h1 { font-size: clamp(32px, 5vw, 46px); }
+  .role { margin-top: 9px; font-size: 18px; color: var(--color-accent); font-weight: 550; }
+  .contact-bar {
+    margin-top: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 15px;
+  }
+  .contact-bar span { color: var(--color-text-faint); }
+  .avail { margin-top: 12px; font-size: 14.5px; }
+
+  .block { padding-top: 56px; }
+  .block h2 {
+    font-size: 13px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.11em;
+    color: var(--color-accent);
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .prose { margin-top: 22px; max-width: 70ch; }
+  .prose p { color: var(--color-text-muted); font-size: 16.5px; }
+  .prose p + p { margin-top: 15px; }
+
+  .skills { margin: 8px 0 0; }
+  .skill-row {
+    display: grid;
+    grid-template-columns: 190px 1fr;
+    gap: 20px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .skill-row dt { font-weight: 600; font-size: 14.5px; }
+  .skill-row dd { margin: 0; }
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; }
+
+  .roles { list-style: none; margin: 26px 0 0; padding: 0; }
+  .role-item { padding-bottom: 30px; margin-bottom: 30px; border-bottom: 1px solid var(--color-border); }
+  .role-item:last-child { border-bottom: 0; margin-bottom: 0; }
+  .role-head { display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+  .role-item h3 { font-size: 19px; }
+  .org { margin-top: 5px; font-size: 15.5px; color: var(--color-accent); font-weight: 550; }
+  .place { font-size: 14px; margin-top: 3px; }
+  .period {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--color-text-faint);
+    white-space: nowrap;
+    padding-top: 4px;
+  }
+  .role-item ul { margin: 16px 0 0; padding-left: 19px; max-width: 74ch; }
+  .role-item ul li { margin-bottom: 9px; font-size: 15.5px; color: var(--color-text-muted); }
+  .note { margin-top: 24px; font-size: 14.5px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .two-col > div > h2 { margin-bottom: 0; }
+  .plain { list-style: none; margin: 22px 0 0; padding: 0; }
+  .plain li { margin-bottom: 18px; }
+  .strong { font-weight: 600; font-size: 15.5px; }
+  .small { font-size: 14px; margin-top: 2px; }
+
+  .panel {
+    margin-top: 12px;
+    padding: 42px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background:
+      radial-gradient(600px 240px at 85% 0%, var(--color-accent-soft), transparent 70%),
+      var(--color-surface);
+  }
+  .panel-h {
+    font-family: var(--font-sans);
+    font-size: clamp(23px, 3vw, 30px);
+    text-transform: none;
+    letter-spacing: -0.022em;
+    color: var(--color-text);
+    border-bottom: 0;
+    padding-bottom: 0;
+    margin-bottom: 12px;
+  }
+  .panel p { max-width: 58ch; font-size: 16px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 26px; }
+
+  @media (max-width: 760px) {
+    .skill-row { grid-template-columns: 1fr; gap: 10px; }
+    .two-col { grid-template-columns: 1fr; gap: 34px; }
+  }
+  @media (max-width: 640px) {
+    .panel { padding: 28px 22px; }
+  }
+</style>

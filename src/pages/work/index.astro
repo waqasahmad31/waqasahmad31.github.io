@@ -1,0 +1,177 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { projectGroups, allProjects } from '../../data/profile';
+---
+
+<Layout
+  title="Work"
+  description="Every project Waqas Ahmad has shipped — national identity systems, ERP, healthcare, streaming, telehealth, recruitment, risk assessment, Web3 and e-commerce — with the architecture and stack behind each one."
+>
+  <section class="head">
+    <div class="wrap-wide">
+      <p class="kicker">Work</p>
+      <h1>{allProjects.length} projects, and how each one was built</h1>
+      <p class="lede muted">
+        Six years of delivery across twelve industries. Three have full case studies because the
+        engineering decisions in them are worth explaining at length; the rest are described here by
+        what they do, what I built, and what they were built on.
+      </p>
+      <p class="lede muted">
+        Client code is private and stays that way — where a repository is public or a product is
+        live, it is linked.
+      </p>
+    </div>
+  </section>
+
+  {projectGroups.map((g) => (
+    <section class="group">
+      <div class="wrap-wide">
+        <div class="group-head">
+          <h2>{g.group}</h2>
+          <p class="muted">{g.blurb}</p>
+        </div>
+
+        <div class="items">
+          {g.projects.map((p) => (
+            <article class="project">
+              <div class="project-head">
+                <div>
+                  <h3>{p.name}</h3>
+                  <p class="meta">
+                    <span>{p.org}</span>
+                    <span aria-hidden="true">·</span>
+                    <span>{p.period}</span>
+                    <span aria-hidden="true">·</span>
+                    <span>{p.domain}</span>
+                  </p>
+                </div>
+                {p.slug && <a class="badge" href={p.slug}>Case study</a>}
+              </div>
+
+              <p class="summary">{p.summary}</p>
+
+              <ul class="detail">
+                {p.detail.map((d) => <li>{d}</li>)}
+              </ul>
+
+              <div class="tags">
+                {p.stack.map((s) => <span class="tag">{s}</span>)}
+              </div>
+
+              {(p.slug || p.external) && (
+                <p class="links">
+                  {p.slug && <a href={p.slug}>Read the full case study →</a>}
+                  {p.external && (
+                    <a href={p.external.href} rel="noopener">{p.external.label} →</a>
+                  )}
+                </p>
+              )}
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section class="group">
+    <div class="wrap-wide">
+      <div class="closing">
+        <h2>Want the detail behind any of these?</h2>
+        <p class="muted">
+          I am happy to walk through architecture, trade-offs and what I would do differently — for
+          the private ones as much as the public ones.
+        </p>
+        <div class="actions">
+          <a class="btn primary" href="mailto:iamwaqas31@gmail.com">Get in touch</a>
+          <a class="btn" href="/about/">About &amp; full CV</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .head { padding: 64px 0 40px; }
+  h1 { font-size: clamp(30px, 5vw, 46px); max-width: 20ch; }
+  .lede { margin-top: 20px; max-width: 64ch; font-size: 17px; }
+  .lede + .lede { margin-top: 14px; }
+
+  .group { padding-top: 56px; }
+  .group-head {
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .group-head h2 { font-size: 13px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.11em; color: var(--color-accent); }
+  .group-head p { margin-top: 8px; font-size: 15px; max-width: 64ch; }
+
+  .items { display: grid; gap: 18px; margin-top: 26px; }
+
+  .project {
+    min-width: 0;
+    padding: 28px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  .project-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .project h3 { font-size: 20px; overflow-wrap: anywhere; }
+  .meta {
+    margin-top: 7px;
+    font-size: 13.5px;
+    color: var(--color-text-faint);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .badge {
+    flex: none;
+    font-size: 12.5px;
+    font-weight: 550;
+    padding: 5px 13px;
+    border-radius: 999px;
+    background: var(--color-accent-soft);
+    border: 1px solid var(--color-accent);
+    color: var(--color-accent);
+  }
+  .badge:hover { text-decoration: none; background: var(--color-accent); color: var(--color-on-accent); }
+
+  .summary {
+    margin-top: 16px;
+    font-size: 16px;
+    max-width: 68ch;
+  }
+
+  .detail { margin: 16px 0 0; padding-left: 19px; max-width: 72ch; }
+  .detail li { margin-bottom: 9px; font-size: 15px; color: var(--color-text-muted); }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 20px; }
+
+  .links { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 20px; font-size: 14.5px; font-weight: 500; }
+
+  .closing {
+    margin-top: 12px;
+    padding: 40px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background:
+      radial-gradient(600px 240px at 85% 0%, var(--color-accent-soft), transparent 70%),
+      var(--color-surface);
+  }
+  .closing h2 { font-size: clamp(22px, 3vw, 29px); letter-spacing: -0.022em; text-transform: none; font-family: var(--font-sans); color: var(--color-text); }
+  .closing p { margin-top: 12px; max-width: 58ch; font-size: 16px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 26px; }
+
+  @media (max-width: 640px) {
+    .project { padding: 22px 20px; }
+    .project-head { flex-direction: column; }
+    .closing { padding: 26px 22px; }
+  }
+</style>

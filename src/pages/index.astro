@@ -1,108 +1,72 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import {
+  profile,
+  impact,
+  skillGroups,
+  experience,
+  featuredProjects,
+  allProjects,
+} from '../data/profile';
 
-const impact = [
-  { figure: '23K/hour', label: 'Enrolment throughput on a national identity system — up roughly 4× from 4–6K.' },
-  { figure: '16 nodes', label: 'Kubernetes footprint I deliver across, spanning Production and Disaster Recovery.' },
-  { figure: 'Team of 8', label: 'Engineers I lead — review, releases, production deployments and hiring.' },
-  { figure: '6+ years', label: 'Shipping production web and desktop platforms end-to-end.' },
+const otherProjectCount = allProjects.length - featuredProjects.length;
+
+const domains = [
+  'Government identity',
+  'ERP',
+  'Healthcare & telehealth',
+  'Streaming',
+  'E-learning',
+  'Recruitment',
+  'Risk & compliance',
+  'Legal tech',
+  'Travel',
+  'E-commerce',
+  'Web3',
+  'Supply chain',
 ];
 
-const caseStudies = [
-  {
-    href: '/work/abis/',
-    kicker: 'Government · national scale',
-    title: 'Scaling a national identity system to 23,000 enrolments an hour',
-    summary:
-      'A biometric enrolment pipeline was plateauing at 4–6K records an hour. Batching, index and query work, and table partitioning took it past 23K — and it had to stay auditable and secure while it got faster.',
-    tags: ['ASP.NET Core 8', 'PostgreSQL', 'Kubernetes', 'RabbitMQ'],
-  },
-  {
-    href: '/work/coreflow/',
-    kicker: 'Own product · in progress',
-    title: 'CoreFlow — designing an ERP a small team can actually maintain',
-    summary:
-      'An ERP covering CRM, inventory, sales, procurement and finance for growing SMEs. The hard constraint was never features — it was keeping six modules from collapsing into one tangled codebase.',
-    tags: ['Clean Architecture', 'CQRS', 'Dapper', 'Redis'],
-  },
-  {
-    href: '/work/healthcarems/',
-    kicker: 'Open source · code available',
-    title: 'HealthCareMS — clinical workflows without a distributed system',
-    summary:
-      'Appointments, e-prescriptions, pharmacy stock and lab orders in one .NET 10 platform. A deliberate choice to keep it a well-layered monolith, and what that bought.',
-    tags: ['.NET 10', 'Blazor WASM', 'SignalR', 'Hangfire'],
-  },
-];
-
-const stack = [
-  { label: 'Backend', items: 'ASP.NET Core 8 · C# / .NET · EF Core · Dapper · REST APIs · Microservices · Clean Architecture · CQRS' },
-  { label: 'Frontend & desktop', items: 'Angular · NgRx / RxJS · TypeScript · React.js · Blazor (Server & WASM) · WPF / MVVM' },
-  { label: 'Data', items: 'PostgreSQL · MS SQL Server · MongoDB · MySQL · Redis' },
-  { label: 'Platform & messaging', items: 'Docker · Kubernetes · GitLab CI/CD · Azure DevOps · RabbitMQ · SignalR' },
-  { label: 'Security & quality', items: 'Keycloak SSO/MFA · HashiCorp Vault PKI · JWT / OAuth2 · xUnit · OpenTelemetry · Polly' },
-];
-
-const roles = [
-  {
-    period: 'May 2025 — Present',
-    title: 'Senior Full-Stack Engineer, Technical Team Lead',
-    org: 'Techostudios · Consult First IM&T (UK)',
-    notes: [
-      'Technical lead for eight engineers: merge-request review, release and production-deployment ownership, client requirement sessions, and technical interviewing.',
-      'Full-stack delivery of a national biometric identity platform — ASP.NET Core 8 API, WPF and Blazor Server clients, and an Angular import client, on Kubernetes via GitLab CI/CD.',
-      'Architected CoreFlow, an enterprise ERP on Clean Architecture, CQRS, PostgreSQL/Dapper and Redis hybrid caching.',
-    ],
-  },
-  {
-    period: 'Apr 2024 — Jun 2025',
-    title: 'Full-Stack .NET & Angular Developer',
-    org: 'Bingeable Technologies',
-    notes: [
-      'Built Bingeable, a streaming platform on .NET Core, Angular and AWS S3, from data model through UI.',
-      'Delivered Telemed Health with embedded Jitsi Meet consultation plus pharmacy and lab workflows — alongside e-learning, smart-home, travel, NFT and e-commerce products.',
-    ],
-  },
-  {
-    period: 'Jan 2023 — Aug 2024',
-    title: 'Full-Stack .NET & Angular Developer',
-    org: 'Arhpez Technologies',
-    notes: [
-      'Juris, a legal case-management platform with SignalR-powered real-time collaboration, and JobHunt USA, a recruitment platform with background-verification workflows.',
-      'IntelliDelve, a risk-assessment platform covering 100+ countries.',
-    ],
-  },
-  {
-    period: 'Jun 2020 — Dec 2022',
-    title: '.NET Developer',
-    org: 'Netrex Cloud',
-    notes: ['Built Tharwa, a meat supply-chain platform for an Oman-based client, on ASP.NET and .NET APIs.'],
-  },
-];
+const highlightSkills = skillGroups.filter((g) => g.label !== 'Also worked with');
 ---
 
 <Layout
   title="Senior .NET & Angular Engineer"
-  description="Waqas Ahmad — senior full-stack .NET and Angular developer and technical team lead in Islamabad. Case studies from national-scale identity systems, ERP architecture and clinical platforms."
+  description="Waqas Ahmad — senior full-stack .NET and Angular developer and technical team lead in Islamabad, Pakistan. Case studies from national-scale identity systems, ERP architecture and clinical platforms. Open to remote, onsite and relocation."
 >
   <section class="hero">
-    <div class="wrap">
-      <p class="kicker">Islamabad, Pakistan (GMT+5) · Open to remote, onsite &amp; relocation</p>
-      <h1>I build and lead production systems end&#8209;to&#8209;end.</h1>
-      <p class="lede">
-        Senior full-stack .NET &amp; Angular developer, currently technical lead for a team of eight
-        delivering a national-scale biometric identity platform. Six years taking systems from
-        database schema through UI, and from CI/CD through production support.
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="wrap-wide hero-inner">
+      <p class="status">
+        <span class="dot" aria-hidden="true"></span>
+        Open to senior, lead &amp; architect roles — remote, onsite or relocation
       </p>
+
+      <h1>I build and lead production systems end&#8209;to&#8209;end.</h1>
+
+      <p class="lede">
+        {profile.title} and technical lead for a team of eight, currently delivering a national-scale
+        biometric identity platform. Six years shipping web and desktop products for clients across
+        the <strong>UK, the Gulf and government</strong> — from database schema through UI, and from
+        CI/CD through production support.
+      </p>
+
       <div class="actions">
-        <a class="btn primary" href="#work">Read the case studies</a>
-        <a class="btn" href="mailto:iamwaqas31@gmail.com">Get in touch</a>
+        <a class="btn primary" href="/work/">See all work</a>
+        <a class="btn" href="/about/">About &amp; full CV</a>
+        <a class="btn" href={`mailto:${profile.email}`}>Get in touch</a>
       </div>
+
+      <dl class="quickfacts">
+        <div><dt>Based in</dt><dd>{profile.location} ({profile.timezone})</dd></div>
+        <div><dt>Currently</dt><dd>Tech lead, Techostudios</dd></div>
+        <div><dt>Email</dt><dd><a href={`mailto:${profile.email}`}>{profile.email}</a></dd></div>
+        <div><dt>Phone</dt><dd><a href={profile.phoneHref}>{profile.phone}</a></dd></div>
+      </dl>
     </div>
   </section>
 
-  <section class="impact">
-    <div class="wrap">
+  <section class="impact-band">
+    <div class="wrap-wide">
       <div class="impact-grid">
         {impact.map((i) => (
           <div class="stat">
@@ -114,23 +78,24 @@ const roles = [
     </div>
   </section>
 
-  <section id="work" class="block">
-    <div class="wrap">
+  <section class="block">
+    <div class="wrap-wide">
       <p class="kicker">Selected work</p>
       <h2>Three systems, and the decisions behind them</h2>
       <p class="section-note muted">
         Most of what I build is private or client-owned, so these are written as case studies rather
-        than repositories — the problem, the trade-offs, and what actually changed.
+        than repositories — the problem, the trade-offs, and what actually changed. Another
+        {otherProjectCount} projects are described on the <a href="/work/">work page</a>.
       </p>
 
       <div class="cases">
-        {caseStudies.map((c) => (
-          <a class="case" href={c.href}>
-            <p class="case-kicker">{c.kicker}</p>
-            <h3>{c.title}</h3>
+        {featuredProjects.map((c) => (
+          <a class="case" href={c.slug}>
+            <p class="case-kicker">{c.domain} · {c.period}</p>
+            <h3>{c.name}</h3>
             <p class="muted">{c.summary}</p>
             <div class="tags">
-              {c.tags.map((t) => <span class="tag">{t}</span>)}
+              {c.stack.slice(0, 5).map((t) => <span class="tag">{t}</span>)}
             </div>
             <span class="more">Read the case study →</span>
           </a>
@@ -140,141 +105,214 @@ const roles = [
   </section>
 
   <section class="block">
-    <div class="wrap">
-      <p class="kicker">Stack</p>
+    <div class="wrap-wide">
+      <p class="kicker">Capability</p>
       <h2>What I work with</h2>
-      <dl class="stack">
-        {stack.map((s) => (
-          <div class="stack-row">
-            <dt>{s.label}</dt>
-            <dd class="muted">{s.items}</dd>
+      <div class="skills">
+        {highlightSkills.map((g) => (
+          <div class="skill-group">
+            <h3>{g.label}</h3>
+            <div class="tags">
+              {g.items.map((s) => <span class="tag">{s}</span>)}
+            </div>
           </div>
         ))}
-      </dl>
+      </div>
+      <p class="note muted">
+        Full skill list, including legacy stacks, on the <a href="/about/">about page</a>.
+      </p>
     </div>
   </section>
 
-  <section id="experience" class="block">
-    <div class="wrap">
+  <section class="block">
+    <div class="wrap-wide">
+      <p class="kicker">Range</p>
+      <h2>Domains I have shipped into</h2>
+      <p class="section-note muted">
+        Twelve industries in six years. Breadth is not the point on its own — it means I have had to
+        learn a business quickly and often, which is most of what delivery work actually is.
+      </p>
+      <div class="tags domains">
+        {domains.map((d) => <span class="tag">{d}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap-wide">
       <p class="kicker">Experience</p>
       <h2>Where I have done it</h2>
       <ol class="timeline">
-        {roles.map((r) => (
+        {experience.map((r) => (
           <li>
             <p class="period">{r.period}</p>
             <h3>{r.title}</h3>
             <p class="org">{r.org}</p>
-            <ul>
-              {r.notes.map((n) => <li class="muted">{n}</li>)}
-            </ul>
+            {r.context && <p class="context muted">{r.context}</p>}
           </li>
         ))}
       </ol>
-      <p class="edu muted">
-        MS Computer Science (3.96 GPA), Gomal University, 2023 · BS Computer Science (3.97 GPA),
-        Qurtuba University, 2020 · Pashto and Urdu native, English professional working proficiency.
+      <p class="note muted">
+        Full responsibilities and outcomes for each role on the
+        <a href="/about/">about page</a>.
       </p>
     </div>
   </section>
 
-  <section class="block contact">
-    <div class="wrap">
+  <section class="block contact-cta">
+    <div class="wrap-wide panel">
       <p class="kicker">Contact</p>
       <h2>Open to senior, lead and architect roles</h2>
       <p class="muted">
-        Remote, onsite or relocation — contract or full-time. The fastest way to reach me is email;
-        happy to walk through any of the architecture above in a conversation.
+        Remote, onsite or relocation — contract or full-time. The fastest way to reach me is email,
+        and I am happy to walk through the architecture behind any of this work in a conversation.
       </p>
       <div class="actions">
-        <a class="btn primary" href="mailto:iamwaqas31@gmail.com">iamwaqas31@gmail.com</a>
-        <a class="btn" href="https://linkedin.com/in/waqasahmad-dev" rel="noopener">LinkedIn</a>
-        <a class="btn" href="https://github.com/waqasahmad31" rel="noopener">GitHub</a>
+        <a class="btn primary" href={`mailto:${profile.email}`}>{profile.email}</a>
+        <a class="btn" href={profile.phoneHref}>{profile.phone}</a>
+        <a class="btn" href={profile.linkedin} rel="noopener">LinkedIn</a>
       </div>
     </div>
   </section>
 </Layout>
 
 <style>
-  .hero { padding: 88px 0 52px; }
-  .hero h1 { font-size: clamp(32px, 5.4vw, 50px); max-width: 15ch; }
-  .lede { margin-top: 22px; max-width: 60ch; font-size: 17.5px; color: var(--color-text-muted); }
-
-  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
-  .btn {
-    display: inline-block;
-    padding: 10px 19px;
-    border-radius: 999px;
-    border: 1px solid var(--color-border);
-    color: var(--color-text);
-    font-size: 15px;
-    font-weight: 500;
+  .hero { position: relative; padding: 76px 0 58px; overflow: hidden; }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(760px 340px at 12% -8%, var(--color-accent-soft), transparent 70%),
+      linear-gradient(180deg, var(--color-bg-tint), transparent 55%);
+    pointer-events: none;
   }
-  .btn:hover { text-decoration: none; border-color: var(--color-accent); }
-  .btn.primary { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+  .hero-inner { position: relative; }
 
-  .impact { padding: 20px 0 8px; }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    padding: 6px 15px 6px 12px;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    border-radius: 999px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.18);
+    flex: none;
+  }
+
+  h1 { font-size: clamp(34px, 6vw, 60px); max-width: 16ch; margin-top: 26px; }
+  .lede {
+    margin-top: 24px;
+    max-width: 64ch;
+    font-size: 18px;
+    color: var(--color-text-muted);
+  }
+  .lede strong { color: var(--color-text); font-weight: 600; }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 32px; }
+
+  .quickfacts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px 28px;
+    margin: 44px 0 0;
+    padding-top: 26px;
+    border-top: 1px solid var(--color-border);
+  }
+  .quickfacts dt {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+  .quickfacts dd { margin: 5px 0 0; font-size: 14.5px; }
+
+  .impact-band { padding: 8px 0 0; }
   .impact-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 26px 32px;
-    padding: 30px 0;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 26px 34px;
+    padding: 34px 0;
     border-top: 1px solid var(--color-border);
     border-bottom: 1px solid var(--color-border);
   }
-  .figure {
-    font-size: 27px;
-    font-weight: 680;
-    letter-spacing: -0.03em;
-    color: var(--color-accent);
+  .figure { font-size: 29px; font-weight: 680; letter-spacing: -0.035em; color: var(--color-accent); }
+  .stat p { font-size: 14.5px; margin-top: 7px; }
+
+  .block { padding-top: var(--section-gap); }
+  .block h2 { font-size: clamp(24px, 3.4vw, 33px); margin-bottom: 15px; }
+  .section-note { max-width: 62ch; font-size: 16px; }
+  .note { font-size: 14.5px; margin-top: 22px; }
+
+  .cases {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 18px;
+    margin-top: 34px;
   }
-  .stat p { font-size: 14.5px; margin-top: 6px; }
-
-  .block { padding: 64px 0 0; }
-  .block h2 { font-size: clamp(23px, 3.2vw, 30px); margin-bottom: 14px; }
-  .section-note { max-width: 58ch; font-size: 15.5px; }
-
-  .cases { display: grid; gap: 16px; margin-top: 32px; }
   .case {
-    display: block;
-    padding: 26px 26px 24px;
+    display: flex;
+    flex-direction: column;
+    padding: 26px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     background: var(--color-surface);
     color: var(--color-text);
-    transition: border-color 0.15s ease, transform 0.15s ease;
+    box-shadow: var(--shadow-card);
+    transition: border-color 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
   }
-  .case:hover { text-decoration: none; border-color: var(--color-accent); transform: translateY(-2px); }
+  .case:hover {
+    text-decoration: none;
+    border-color: var(--color-accent);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card-hover);
+  }
   .case-kicker {
     font-family: var(--font-mono);
-    font-size: 11.5px;
+    font-size: 11px;
     letter-spacing: 0.09em;
     text-transform: uppercase;
     color: var(--color-text-faint);
   }
-  .case h3 { font-size: 20px; margin: 10px 0 10px; max-width: 34ch; }
-  .case p.muted { font-size: 15.5px; }
-  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 16px; }
-  .more { display: inline-block; margin-top: 16px; font-size: 14.5px; color: var(--color-accent); }
+  .case h3 { font-size: 19px; margin: 11px 0 10px; }
+  .case p.muted { font-size: 15px; flex: 1; }
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 17px; }
+  .more { display: inline-block; margin-top: 18px; font-size: 14.5px; color: var(--color-accent); font-weight: 500; }
 
-  .stack { margin: 26px 0 0; display: grid; gap: 0; }
-  .stack-row {
+  .skills {
     display: grid;
-    grid-template-columns: 190px 1fr;
-    gap: 18px;
-    padding: 15px 0;
-    border-top: 1px solid var(--color-border);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 26px 38px;
+    margin-top: 32px;
   }
-  .stack-row:last-child { border-bottom: 1px solid var(--color-border); }
-  .stack dt { font-weight: 600; font-size: 15px; }
-  .stack dd { margin: 0; font-size: 15px; }
+  .skill-group h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-faint); font-family: var(--font-mono); font-weight: 600; }
+  .skill-group .tags { margin-top: 11px; }
 
-  .timeline { list-style: none; margin: 28px 0 0; padding: 0; }
-  .timeline > li { padding: 0 0 30px 22px; border-left: 2px solid var(--color-border); position: relative; }
+  .domains { margin-top: 26px; }
+  .domains .tag { font-family: var(--font-sans); font-size: 13.5px; padding: 6px 13px; }
+
+  .timeline { list-style: none; margin: 32px 0 0; padding: 0; }
+  .timeline > li {
+    padding: 0 0 26px 24px;
+    border-left: 2px solid var(--color-border);
+    position: relative;
+  }
+  .timeline > li:last-child { padding-bottom: 0; }
   .timeline > li::before {
     content: '';
     position: absolute;
     left: -6px;
-    top: 7px;
+    top: 8px;
     width: 10px;
     height: 10px;
     border-radius: 50%;
@@ -283,15 +321,21 @@ const roles = [
   .period { font-family: var(--font-mono); font-size: 12.5px; color: var(--color-text-faint); }
   .timeline h3 { font-size: 18px; margin: 7px 0 3px; }
   .org { font-size: 15px; color: var(--color-accent); }
-  .timeline ul { margin: 12px 0 0; padding-left: 18px; }
-  .timeline ul li { font-size: 15px; margin-bottom: 7px; }
-  .edu { font-size: 14.5px; padding-top: 6px; }
+  .context { font-size: 14px; margin-top: 3px; }
 
-  .contact h2 { max-width: 20ch; }
-  .contact p { max-width: 56ch; font-size: 16px; }
+  .contact-cta .panel {
+    padding: 44px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background:
+      radial-gradient(600px 240px at 88% 0%, var(--color-accent-soft), transparent 70%),
+      var(--color-surface);
+  }
+  .contact-cta h2 { max-width: 22ch; }
+  .contact-cta p { max-width: 58ch; font-size: 16px; }
 
   @media (max-width: 640px) {
-    .hero { padding: 58px 0 40px; }
-    .stack-row { grid-template-columns: 1fr; gap: 4px; }
+    .hero { padding: 52px 0 40px; }
+    .contact-cta .panel { padding: 28px 22px; }
   }
 </style>
