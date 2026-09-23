@@ -58,12 +58,12 @@ import { projectGroups, allProjects } from '../../data/profile';
                 {p.stack.map((s) => <span class="tag">{s}</span>)}
               </div>
 
-              {(p.slug || p.external) && (
+              {(p.slug || p.links) && (
                 <p class="links">
                   {p.slug && <a href={p.slug}>Read the full case study →</a>}
-                  {p.external && (
-                    <a href={p.external.href} rel="noopener">{p.external.label} →</a>
-                  )}
+                  {p.links?.map((l) => (
+                    <a href={l.href} rel="noopener">{l.label} →</a>
+                  ))}
                 </p>
               )}
             </article>

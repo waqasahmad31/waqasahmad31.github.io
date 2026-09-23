@@ -204,7 +204,7 @@ export type Project = {
   name: string;
   slug?: string;
   href?: string;
-  external?: { href: string; label: string };
+  links?: { href: string; label: string }[];
   org: string;
   period: string;
   domain: string;
@@ -262,10 +262,10 @@ export const projectGroups: { group: string; blurb: string; projects: Project[] 
       {
         name: 'CoreFlow — enterprise ERP platform',
         slug: '/work/coreflow/',
-        external: {
-          href: 'https://github.com/waqasahmad31/CoreFlow.Marketing',
-          label: 'Product site on GitHub',
-        },
+        links: [
+          { href: 'https://coreflow-io.netlify.app', label: 'Visit the live product site' },
+          { href: 'https://github.com/waqasahmad31/CoreFlow.Marketing', label: 'Site source on GitHub' },
+        ],
         org: 'Own product',
         period: '2025 — present',
         domain: 'ERP · B2B SaaS',
@@ -306,10 +306,7 @@ export const projectGroups: { group: string; blurb: string; projects: Project[] 
       {
         name: 'HealthCareMS',
         slug: '/work/healthcarems/',
-        external: {
-          href: 'https://github.com/waqasahmad31/HealthCareMS',
-          label: 'Read the code on GitHub',
-        },
+        links: [{ href: 'https://github.com/waqasahmad31/HealthCareMS', label: 'Read the code on GitHub' }],
         org: 'Personal project',
         period: '2025',
         domain: 'Healthcare',
@@ -337,10 +334,7 @@ export const projectGroups: { group: string; blurb: string; projects: Project[] 
       },
       {
         name: 'enterprise-ngrx-template',
-        external: {
-          href: 'https://github.com/waqasahmad31/enterprise-ngrx-template',
-          label: 'View on GitHub',
-        },
+        links: [{ href: 'https://github.com/waqasahmad31/enterprise-ngrx-template', label: 'View on GitHub' }],
         org: 'Personal project',
         period: '2025',
         domain: 'Frontend architecture',
@@ -356,7 +350,7 @@ export const projectGroups: { group: string; blurb: string; projects: Project[] 
       },
       {
         name: 'MicroShop',
-        external: { href: 'https://github.com/waqasahmad31/MicroShop', label: 'View on GitHub' },
+        links: [{ href: 'https://github.com/waqasahmad31/MicroShop', label: 'View on GitHub' }],
         org: 'Personal project',
         period: '2025 — in progress',
         domain: 'Microservices',
@@ -372,10 +366,7 @@ export const projectGroups: { group: string; blurb: string; projects: Project[] 
       },
       {
         name: 'Ecommerce_Angular_DotNetCore',
-        external: {
-          href: 'https://github.com/waqasahmad31/Ecommerce_Angular_DotNetCore',
-          label: 'View on GitHub',
-        },
+        links: [{ href: 'https://github.com/waqasahmad31/Ecommerce_Angular_DotNetCore', label: 'View on GitHub' }],
         org: 'Personal project',
         period: '2023',
         domain: 'E-commerce',
@@ -517,7 +508,7 @@ export const projectGroups: { group: string; blurb: string; projects: Project[] 
       },
       {
         name: 'Tharwa',
-        external: { href: 'https://tharwa.om', label: 'tharwa.om' },
+        links: [{ href: 'https://tharwa.om', label: 'tharwa.om' }],
         org: 'Netrex Cloud',
         period: '2020 — 2022',
         domain: 'Supply chain',

@@ -9,10 +9,10 @@ interface Props {
   standfirst: string;
   meta: { label: string; value: string }[];
   stack: string[];
-  repo?: { href: string; label: string };
+  links?: { href: string; label: string }[];
 }
 
-const { title, description, kicker, heading, standfirst, meta, stack, repo } = Astro.props;
+const { title, description, kicker, heading, standfirst, meta, stack, links } = Astro.props;
 ---
 
 <Layout title={title} description={description}>
@@ -37,9 +37,11 @@ const { title, description, kicker, heading, standfirst, meta, stack, repo } = A
           {stack.map((s) => <span class="tag">{s}</span>)}
         </div>
 
-        {repo && (
+        {links && (
           <p class="repo">
-            <a href={repo.href} rel="noopener">{repo.label} →</a>
+            {links.map((l) => (
+              <a href={l.href} rel="noopener">{l.label} →</a>
+            ))}
           </p>
         )}
       </div>
@@ -85,7 +87,7 @@ const { title, description, kicker, heading, standfirst, meta, stack, repo } = A
   .meta dd { margin: 5px 0 0; font-size: 15px; }
 
   .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 26px; }
-  .repo { margin-top: 20px; font-size: 15px; }
+  .repo { margin-top: 20px; font-size: 15px; display: flex; flex-wrap: wrap; gap: 20px; font-weight: 500; }
 
   .body { padding-top: 14px; }
 </style>
