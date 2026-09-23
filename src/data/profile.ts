@@ -97,12 +97,12 @@ export const skillGroups = [
     ],
   },
   {
-    label: 'Mobile & ML',
-    items: ['Ionic', 'Cordova', 'Microsoft.ML', 'ONNX Runtime'],
+    label: 'Machine learning',
+    items: ['Microsoft.ML', 'ONNX Runtime', 'In-process model inference'],
   },
   {
     label: 'Node.js',
-    items: ['Node.js', 'Express', 'Sequelize', 'Jenkins'],
+    items: ['Node.js', 'Express', 'Sequelize', 'Socket.IO', 'Passport', 'Jenkins'],
   },
   {
     label: 'Platform & DevOps',
@@ -550,13 +550,13 @@ export const projectGroups: { group: string; blurb: string; projects: Project[] 
         period: '2023 — 2024',
         domain: 'Legal tech',
         summary:
-          'A legal case-management platform with real-time collaboration — plus a companion Android application, so a case could be worked from court as well as from a desk.',
+          'A legal case-management platform with real-time collaboration, so several people can work a case without stepping on each other.',
         detail: [
           'The platform is an ASP.NET MVC application with ASP.NET Identity, a separate model project and its own database project, built on the .NET Framework stack the client already ran.',
-          'SignalR carries the real-time collaboration — case updates propagate to everyone viewing rather than appearing on the next refresh. In a legal context an audit trail matters as much as the feature itself.',
-          'The mobile side is an Ionic 5 and Cordova application packaged for Android, with device camera access for capturing case documents on site. Cross-platform was the right call for a team this size: one codebase, and the web platform stayed the source of truth.',
+          'SignalR carries the real-time collaboration — case updates propagate to everyone viewing rather than appearing on the next refresh.',
+          'Case management in a legal context means an audit trail matters as much as the feature itself: who changed what, and when, is part of the product rather than a logging concern.',
         ],
-        stack: ['ASP.NET MVC', 'SignalR', 'ASP.NET Identity', 'Ionic 5', 'Cordova', 'SQL Server'],
+        stack: ['ASP.NET MVC', 'SignalR', 'ASP.NET Identity', 'SQL Server'],
       },
       {
         name: 'JobHunt USA',
@@ -587,6 +587,62 @@ export const projectGroups: { group: string; blurb: string; projects: Project[] 
           'An Angular 15 client served from the API host, with live status pushed as checks resolve so a user watching a long-running assessment sees progress instead of polling.',
         ],
         stack: ['.NET 5', 'Angular 15', 'Dapper', 'JWT', 'BCrypt', 'NLog', 'SignalR'],
+      },
+      {
+        name: 'Aqarcoo',
+        org: 'Arhpez Technologies',
+        period: '2023 — 2024',
+        domain: 'Real estate',
+        summary:
+          'A property listing and search platform, server-side rendered so listings are indexable and load fast on the first visit.',
+        detail: [
+          'Angular 14 with platform-server SSR. For a listings site that is not a preference — a property nobody can find in search results may as well not be listed, and SSR is what makes each listing a real indexable page.',
+          'Media-heavy by nature: embedded video, file upload handling, paginated result sets and progress indication on slow connections.',
+          'SSR-aware cookie handling so session state survives the handoff from server render to client hydration.',
+        ],
+        stack: ['Angular 14', 'SSR', 'TypeScript', 'SEO'],
+      },
+      {
+        name: 'Meggafone',
+        org: 'Arhpez Technologies',
+        period: '2023 — 2024',
+        domain: 'Telecom',
+        summary:
+          'A telecom platform with a separate .NET administration portal, and the engagement where end-to-end testing was part of the delivery rather than an afterthought.',
+        detail: [
+          'The admin portal is ASP.NET Core 5 serving an Angular SPA, with JWT authentication and EF Core over SQL Server.',
+          'Development and UAT ran as separate tracked environments, so what the client reviewed was never the branch someone was mid-change on.',
+          'Cypress covered the end-to-end paths. On a product where a regression means a customer cannot complete an action, a browser-level test catches what a unit test structurally cannot.',
+        ],
+        stack: ['.NET 5', 'Angular', 'EF Core', 'SQL Server', 'JWT', 'Cypress'],
+      },
+      {
+        name: 'Teamway',
+        org: 'Arhpez Technologies',
+        period: '2023 — 2024',
+        domain: 'Collaboration',
+        summary:
+          'A Node.js backend with real-time messaging, SMS delivery and push notifications — the engagement where I worked outside the .NET stack.',
+        detail: [
+          'Express on Node.js with Sequelize over MySQL, rather than EF Core over SQL Server. Worth naming because the architectural instincts transfer but the idioms do not, and knowing where the seams differ is most of what makes a second stack useful.',
+          'Socket.IO for real-time messaging, Twilio for SMS, and Firebase Admin for push notifications to devices.',
+          'Passport with JWT for authentication, Multer for uploads, and a Jenkins pipeline with scripted database backup steps.',
+        ],
+        stack: ['Node.js', 'Express', 'Sequelize', 'MySQL', 'Socket.IO', 'Twilio', 'Jenkins'],
+      },
+      {
+        name: 'Aid Alert',
+        org: 'Arhpez Technologies',
+        period: '2023 — 2024',
+        domain: 'Alerting / emergency response',
+        summary:
+          'An alerting service on Node.js — real-time dispatch with push notification delivery, where late is the same as never.',
+        detail: [
+          'Express on Node.js in a conventional layered shape: routes, controllers, services, models and validators as separate concerns rather than logic in route handlers.',
+          'Socket.IO for live alert dispatch and Firebase Admin for push, because an alert that arrives only when the app is open is not an alert.',
+          'Passport with JWT for authentication, and a Jenkins pipeline for delivery.',
+        ],
+        stack: ['Node.js', 'Express', 'Socket.IO', 'Firebase', 'JWT', 'Jenkins'],
       },
       {
         name: 'Tharwa',
