@@ -15,7 +15,7 @@ export const profile = {
   summary:
     'Senior full-stack developer with 6+ years shipping production web and desktop platforms end-to-end for international clients across the UK, the Gulf and government, currently technical lead for a team of eight. Comfortable across the whole .NET stack — ASP.NET Core, MVC, Web Forms, Blazor and WPF desktop — plus Angular, TypeScript and React on the frontend, and PostgreSQL, SQL Server, MySQL or MongoDB on the data layer, deployed through Docker, Kubernetes and GitLab or Azure DevOps pipelines.',
   summaryTwo:
-    'I have delivered platforms across streaming, telehealth, e-learning, travel booking, NFT/Web3 and e-commerce — and currently a national-scale government biometric identity system where I raised enrolment throughput roughly fourfold, to 23,000 records an hour. I work asynchronously across time zones, own features from database schema through UI, and integrate real-time functionality and third-party APIs as a matter of course.',
+    'I have delivered platforms across streaming, telehealth with on-premise ML inference, fleet management, serverless fintech, e-learning, NFT/Web3 and e-commerce — and currently a national-scale government biometric identity system where I raised enrolment throughput roughly fourfold, to 23,000 records an hour. I work asynchronously across time zones, own features from database schema through UI, and integrate real-time functionality and third-party APIs as a matter of course.',
 };
 
 export const impact = [
@@ -101,8 +101,17 @@ export const skillGroups = [
     ],
   },
   {
-    label: 'Machine learning',
-    items: ['Microsoft.ML', 'ONNX Runtime', 'In-process model inference'],
+    label: 'Python & machine learning',
+    items: [
+      'Python',
+      'FastAPI',
+      'PyTorch',
+      'Hugging Face Transformers',
+      'OpenVINO',
+      'ONNX / ONNX Runtime',
+      'Microsoft.ML',
+      'Local LLM inference',
+    ],
   },
   {
     label: 'Node.js',
@@ -176,6 +185,7 @@ export const experience = [
     notes: [
       'Built Bingeable, a full-stack streaming platform on .NET Core, Angular and AWS S3, from data model through UI.',
       'Built Telemed Health, a telehealth platform with embedded Jitsi Meet video consultation plus pharmacy and lab workflows.',
+      'Built its AI capability: three Python FastAPI services for doctor suggestion and mental-health assessment on Hugging Face Transformers and PyTorch, optimised through OpenVINO and exported to ONNX, evaluated against open generative models including Mistral and GPT-Neo with a fully local inference path, and wrapped in a .NET 8 service running ONNX in-process via Microsoft.ML.',
       'Built CUTC, a credit union onboarding platform, as 13 .NET 8 AWS Lambda functions behind API Gateway — including a five-function authentication suite with configuration in SSM Parameter Store — alongside its hotel and travel planner.',
       'Delivered the KPTC Fleet Management System for a national public transport operator in Kuwait — React 18 and Material UI over a layered .NET 6 API, fully bilingual with Arabic right-to-left support, covering vehicle lifecycle, maintenance scheduling, job orders, inspections and parts inventory.',
       'Delivered Bit Online (e-learning), Home Haven (smart-home automation with live device state over SignalR), and an NFT marketplace on web3.js and ethers — seven distinct products shipped in a single engagement.',
@@ -446,7 +456,7 @@ export const projectGroups: { group: string; blurb: string; projects: Project[] 
           'A telehealth platform with embedded video consultation, pharmacy and lab workflows — and on-server machine-learning inference suggesting likely conditions from reported symptoms.',
         detail: [
           'The backend is a layered .NET 8 solution — API, data access, models and utilities as separate projects — with EF Core over SQL Server, ASP.NET Core Identity and JWT.',
-          'It runs ML inference in-process through Microsoft.ML and the ONNX Runtime, backed by a set of trained symptom and health models, so condition suggestions are served by the API rather than a separate Python service.',
+          'It runs ML inference in-process through Microsoft.ML and the ONNX Runtime, so condition suggestions are served by the API itself. The models behind it are a separate piece of work, described below.',
           'FuzzySharp handles approximate matching where clinical input is typed rather than selected — symptom and drug names people spell differently.',
           'Video consultation is embedded through Jitsi Meet rather than bolted on as an external link, so the consultation stays inside the patient record, and SignalR carries live consultation state.',
           'Angular 18 frontend with an NgRx store, deployed as a container behind nginx through Azure DevOps pipelines, with AWS S3 for document and media storage.',
@@ -550,6 +560,32 @@ export const projectGroups: { group: string; blurb: string; projects: Project[] 
           'Storefront and order flow with inventory management behind it, on .NET Core and Angular.',
         ],
         stack: ['.NET Core', 'Angular', 'SQL'],
+      },
+      {
+        name: 'AI doctor suggestion &amp; mental-health assessment',
+        org: 'Bingeable Technologies',
+        period: '2024 — 2025',
+        domain: 'Healthcare AI',
+        summary:
+          'The machine-learning capability behind Telemed Health — condition suggestion and structured mental-health assessment, running on models hosted on our own infrastructure rather than a paid API.',
+        detail: [
+          'Three Python services on FastAPI: doctor suggestion, a pre-assessment screen, and a guided mental-health self-assessment driven by a structured question set.',
+          'Models are Hugging Face Transformers on PyTorch, optimised for inference through OpenVINO and exported to ONNX. Optimising rather than simply calling a model is what made it viable on the hardware the client actually had.',
+          'The mental-health assessment was built against several open generative models — Mistral and GPT-Neo among them — including a fully local inference path. In healthcare that is an architectural decision before it is a cost one: patient input never leaves the infrastructure it was collected on.',
+          'A .NET 8 service wraps the capability for the rest of the platform, running ONNX models in-process through Microsoft.ML and the ONNX Runtime, so the main API does not depend on a Python process staying up.',
+          'An Angular client surfaces the assessment flow, and the capability feeds Telemed Health rather than standing alone as a demo.',
+        ],
+        stack: [
+          'Python',
+          'FastAPI',
+          'PyTorch',
+          'Transformers',
+          'OpenVINO',
+          'ONNX',
+          'Microsoft.ML',
+          '.NET 8',
+          'Angular',
+        ],
       },
       {
         name: 'KPTC Fleet Management System',
