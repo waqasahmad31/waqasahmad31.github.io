@@ -57,9 +57,13 @@ export const skillGroups = [
     label: 'Frontend & desktop',
     items: [
       'Angular',
+      'React 18',
+      'Redux Toolkit',
+      'Material UI',
+      'Vite',
+      'i18next / RTL localisation',
       'NgRx / RxJS',
       'TypeScript',
-      'React.js',
       'Blazor Server',
       'Blazor WebAssembly',
       'WPF / XAML / MVVM',
@@ -172,7 +176,9 @@ export const experience = [
     notes: [
       'Built Bingeable, a full-stack streaming platform on .NET Core, Angular and AWS S3, from data model through UI.',
       'Built Telemed Health, a telehealth platform with embedded Jitsi Meet video consultation plus pharmacy and lab workflows.',
-      'Delivered Bit Online (e-learning), Home Haven (smart-home automation dashboard), CUTC (travel and hotel planner), an NFT marketplace on Web3.js, and an e-commerce platform with inventory management — six distinct products shipped in a single engagement.',
+      'Built CUTC, a credit union onboarding platform, as 13 .NET 8 AWS Lambda functions behind API Gateway — including a five-function authentication suite with configuration in SSM Parameter Store — alongside its hotel and travel planner.',
+      'Delivered the KPTC Fleet Management System for a national public transport operator in Kuwait — React 18 and Material UI over a layered .NET 6 API, fully bilingual with Arabic right-to-left support, covering vehicle lifecycle, maintenance scheduling, job orders, inspections and parts inventory.',
+      'Delivered Bit Online (e-learning), Home Haven (smart-home automation with live device state over SignalR), and an NFT marketplace on web3.js and ethers — seven distinct products shipped in a single engagement.',
     ],
   },
   {
@@ -185,6 +191,7 @@ export const experience = [
       'Built Juris, a legal case-management platform with SignalR-powered real-time collaboration.',
       'Built JobHunt USA, a recruitment platform with integrated background-verification workflows.',
       'Delivered IntelliDelve, a risk-assessment platform covering 100+ countries, using Angular, .NET Core and SignalR for live status updates across legal, recruitment and risk domains.',
+      'Delivered Aqarcoo (server-side-rendered Angular property platform), Meggafone with its .NET admin portal and Cypress end-to-end coverage, and two Node.js services — Teamway (Express, Sequelize, Socket.IO, Twilio) and Aid Alert (real-time dispatch with push) — behind Jenkins pipelines.',
     ],
   },
   {
@@ -543,6 +550,33 @@ export const projectGroups: { group: string; blurb: string; projects: Project[] 
           'Storefront and order flow with inventory management behind it, on .NET Core and Angular.',
         ],
         stack: ['.NET Core', 'Angular', 'SQL'],
+      },
+      {
+        name: 'KPTC Fleet Management System',
+        org: 'Bingeable Technologies · TeltraOne',
+        period: '2024 — 2025',
+        domain: 'Fleet management · public transport',
+        summary:
+          'A fleet management platform for a national public transport operator in Kuwait — vehicle lifecycle, maintenance scheduling, job orders, inspections and parts inventory, in Arabic and English.',
+        detail: [
+          'The operational core is job orders and maintenance: scheduling preventive and corrective work, assigning and monitoring repairs, digital inspection checklists with approval workflows, and parts inventory with automatic reordering. A workshop that cannot see what is booked for tomorrow is a workshop that stops.',
+          'Fully bilingual through i18next, with Arabic typography and right-to-left layout as a first-class case rather than a stylesheet afterthought. For a Gulf operator that is the difference between a system staff will use and one they will not.',
+          'The frontend is React 18 on Vite with Material UI, Redux Toolkit for state and Recharts for the dashboards — analytics on fleet performance, maintenance status and operational metrics.',
+          'The API is a .NET 6 solution layered into authentication, business, data, model, utility and web projects, with EF Core for writes and Dapper for reporting reads, memory caching on hot lookups, and FastMember with CsvHelper for bulk import and export.',
+          'A separate background synchronisation service and a Windows-service-hosted TeltraOne component sit alongside it, because parts of the operation run on a schedule rather than a request.',
+          'Document generation covers the paperwork the workshop actually runs on — job orders, labour cost breakdowns and inspection records — with reporting built on stored procedures tuned for the volumes involved.',
+        ],
+        stack: [
+          '.NET 6',
+          'React 18',
+          'Vite',
+          'Material UI',
+          'Redux Toolkit',
+          'i18next / RTL',
+          'Dapper',
+          'EF Core',
+          'SQL Server',
+        ],
       },
       {
         name: 'Juris',
